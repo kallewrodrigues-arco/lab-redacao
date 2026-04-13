@@ -372,6 +372,11 @@ function buildInitialDb(): Db {
     { id: 'col-l3-11', nome: 'Livro I • Aula 11', cor: '#6b21a8' },
     { id: 'col-l3-12', nome: 'Livro I • Aula 12', cor: '#6b21a8' },
     { id: 'col-l3-13', nome: 'Livro I • Aula 13', cor: '#6b21a8' },
+    { id: 'col-l3-14', nome: 'Livro I • Aula 14', cor: '#6b21a8' },
+    { id: 'col-l3-15', nome: 'Livro I • Aula 15', cor: '#6b21a8' },
+    { id: 'col-l3-16', nome: 'Livro I • Aula 16', cor: '#6b21a8' },
+    { id: 'col-l3-17', nome: 'Livro I • Aula 17', cor: '#6b21a8' },
+    { id: 'col-l3-18', nome: 'Livro I • Aula 18', cor: '#6b21a8' },
     // ── Coleções das propostas de demo (fora do calendário semanal) ───────────────
     { id: 'col-1', nome: 'Pratique Redação • 4', cor: '#e07b00' }, // usado pelas propostas de demo
     { id: 'col-2', nome: 'Livro I • Aula 1',   cor: '#6b21a8' },
