@@ -1,7 +1,8 @@
 import {
   Escola, Turma, Professor, Aluno, Colecao, Proposta, Redacao,
   CorrecaoRascunho, Liberacao, Devolutiva, EvolucaoAluno,
-  ConfiguracaoLab, AgendaConfig, Mensagem, LatenciaConfig
+  ConfiguracaoLab, AgendaConfig, Mensagem, LatenciaConfig,
+  ModoCorrecao
 } from '@/types';
 
 export interface Db {
@@ -198,7 +199,7 @@ function gerarDadosEmLote(db: Db): void {
       db.redacoes.push({
         id: redacaoId, alunoId, propostaId: proposta.id, turmaId,
         status: 'corrigida', dataEnvio, arquivoUrl: '/mock-essay.jpg',
-        modoCorrecaoAplicado: modo,
+        modoCorrecaoAplicado: 'hibrido' as ModoCorrecao,
       });
 
       const notasComp = distribuirCompetencias(nota, seed);
@@ -245,7 +246,7 @@ function gerarDadosEmLote(db: Db): void {
         id: redacaoId, alunoId, propostaId: proposta.id, turmaId,
         status: isCorrigida ? 'corrigida' : 'aguardando_liberacao',
         dataEnvio, arquivoUrl: '/mock-essay.jpg',
-        modoCorrecaoAplicado: modo,
+        modoCorrecaoAplicado: 'hibrido' as ModoCorrecao,
       });
 
       const notasComp = distribuirCompetencias(nota, seed);
