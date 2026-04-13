@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Redação — Token Preview</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <style>
+    /* ── Layout shell ──────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      align-items: flex-start;
+    }
+
+    /* ── Sidebar ───────────────────────────────────────────────── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      width: 240px;
+      min-width: 240px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #ebeff7;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #626c80;
+      text-decoration: none;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .sidebar-nav-item:hover { background: #f5f7fa; color: #39404d; }
+    .sidebar-nav-item.active { background: #c7d8ff; color: #0035b2; }
+
+    .sidebar-section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #abb3c4;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* make .page fill the remaining space beside the sidebar */
+    .page { flex: 1; margin: 0; }
+
+    /* ── Copy button ───────────────────────────────────────────── */
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-caption);
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s, color 0.15s;
+    }
+    .copy-btn:hover { background: var(--bg-secondary); color: var(--text-body); }
+    .copy-btn.copied { border-color: var(--color-success-text); color: var(--color-success-text); }
+
+    /* show copy btn on hover of parent */
+    .type-label:hover .copy-btn,
+    .type-label:focus-within .copy-btn,
+    .swatch-info:hover .copy-btn,
+    .swatch-info:focus-within .copy-btn,
+    .size-item:hover .copy-btn,
+    .size-item:focus-within .copy-btn,
+    .shadow-label:hover .copy-btn,
+    .shadow-label:focus-within .copy-btn { opacity: 1; }
+
+    /* type-label row */
+    .type-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--font-size-sm);
+      color: var(--text-caption);
+      letter-spacing: 0.2px;
+      margin-bottom: 6px;
+    }
+    .type-label span { flex: 1; }
+
+    /* swatch-name row */
+    .swatch-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .swatch-name span { flex: 1; }
+
+    /* size-item */
+    .size-item { display: flex; align-items: center; gap: var(--space-300); }
+
+    /* shadow label */
+    .shadow-label { display: flex; align-items: center; gap: 6px; }
+    .shadow-label span { flex: 1; }
+
+    /* toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--text-body);
+      color: var(--bg-primary);
+      font-size: var(--font-size-sm);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+      z-index: 9999;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <a href="tokens.html" class="sidebar-nav-item active">Tokens</a>
+    <div class="sidebar-section-label">Componentes</div>
+    <a href="components/buttons.html" class="sidebar-nav-item">Buttons</a>
+    <a href="components/icons.html" class="sidebar-nav-item">Icons</a>
+  </nav>
+
+  <!-- ── Main content ─────────────────────────────────────────── -->
+  <div class="page">
+
+  <!-- =========================================================
+       TIPOGRAFIA
+       ========================================================= -->
+  <section>
+    <p class="section-title">Tipografia — Escala completa</p>
+
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-4xl · 32px</span><button class="copy-btn" onclick="copyToken('--font-size-4xl')" title="Copiar token"><?xml version="1.0"?>&#x2398;</button></p>
+      <p class="heading-xl">Display</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-3xl · 28px</span><button class="copy-btn" onclick="copyToken('--font-size-3xl')" title="Copiar token">&#x2398;</button></p>
+      <p class="heading-3xl">Heading/X-Large</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-2xl · 24px</span><button class="copy-btn" onclick="copyToken('--font-size-2xl')" title="Copiar token">&#x2398;</button></p>
+      <p class="heading-2xl">Heading/Large</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-xl · 20px</span><button class="copy-btn" onclick="copyToken('--font-size-xl')" title="Copiar token">&#x2398;</button></p>
+      <p class="heading-xl-t">Heading/Medium</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-lg · 18px</span><button class="copy-btn" onclick="copyToken('--font-size-lg')" title="Copiar token">&#x2398;</button></p>
+      <p class="heading-lg">Heading/Small</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-lg · 18px · weight 500</span><button class="copy-btn" onclick="copyToken('--font-size-lg')" title="Copiar token">&#x2398;</button></p>
+      <p class="label-lg">Label/Large</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-md · 16px</span><button class="copy-btn" onclick="copyToken('--font-size-md')" title="Copiar token">&#x2398;</button></p>
+      <p class="label-md">Label/Medium · Body/Medium</p>
+    </div>
+    <div class="type-sample">
+      <p class="type-label"><span>--font-size-sm · 14px</span><button class="copy-btn" onclick="copyToken('--font-size-sm')" title="Copiar token">&#x2398;</button></p>
+      <p class="label-sm" style="margin-bottom:4px">Label/Small</p>
+      <p class="caption">Caption</p>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BACKGROUNDS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Backgrounds</p>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bg-primary); border-bottom:1px solid var(--border-secondary)"></div>
+        <div class="swatch-info">
+          <p class="swatch-name"><span>--bg-primary</span><button class="copy-btn" onclick="copyToken('--bg-primary')" title="Copiar token">&#x2398;</button></p>
+          <p class="swatch-value">#ffffff</p>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bg-secondary)"></div>
+        <div class="swatch-info">
+          <p class="swatch-name"><span>--bg-secondary</span><button class="copy-btn" onclick="copyToken('--bg-secondary')" title="Copiar token">&#x2398;</button></p>
+          <p class="swatch-value">#f5f7fa</p>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bg-hover)"></div>
+        <div class="swatch-info">
+          <p class="swatch-name"><span>--bg-hover</span><button class="copy-btn" onclick="copyToken('--bg-hover')" title="Copiar token">&#x2398;</button></p>
+          <p class="swatch-value">#ebeff7</p>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bg-active)"></div>
+        <div class="swatch-info">
+          <p class="swatch-name"><span>--bg-active</span><button class="copy-btn" onclick="copyToken('--bg-active')" title="Copiar token">&#x2398;</button></p>
+          <p class="swatch-value">#cceaff</p>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bg-active-hover)"></div>
+        <div class="swatch-info">
+          <p class="swatch-name"><span>--bg-active-hover</span><button class="copy-btn" onclick="copyToken('--bg-active-hover')" title="Copiar token">&#x2398;</button></p>
+          <p class="swatch-value">#8cafff</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CORES SEMÂNTICAS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Cores semânticas</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-success-text)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-success-text</span><button class="copy-btn" onclick="copyToken('--color-success-text')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#0c7742</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-success-bg)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-success-bg</span><button class="copy-btn" onclick="copyToken('--color-success-bg')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#ccffe6</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-success-bg-tag)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-success-bg-tag</span><button class="copy-btn" onclick="copyToken('--color-success-bg-tag')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#a8f7d0</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-success-icon)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-success-icon</span><button class="copy-btn" onclick="copyToken('--color-success-icon')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#109954</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-warning-text)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-warning-text</span><button class="copy-btn" onclick="copyToken('--color-warning-text')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#a05100</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-warning-bg-tag)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-warning-bg-tag</span><button class="copy-btn" onclick="copyToken('--color-warning-bg-tag')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#ffe1a6</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-warning-icon)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-warning-icon</span><button class="copy-btn" onclick="copyToken('--color-warning-icon')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#b26b07</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-danger-text)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-danger-text</span><button class="copy-btn" onclick="copyToken('--color-danger-text')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#a10e00</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-danger-bg-tag)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-danger-bg-tag</span><button class="copy-btn" onclick="copyToken('--color-danger-bg-tag')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#ffada6</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-danger-icon)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-danger-icon</span><button class="copy-btn" onclick="copyToken('--color-danger-icon')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#b32518</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-info-text)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-info-text</span><button class="copy-btn" onclick="copyToken('--color-info-text')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#0f5384</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-info-bg-tag)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-info-bg-tag</span><button class="copy-btn" onclick="copyToken('--color-info-bg-tag')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#d2d9e5</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--color-info-icon)"></div><div class="swatch-info"><p class="swatch-name"><span>--color-info-icon</span><button class="copy-btn" onclick="copyToken('--color-info-icon')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#0460a1</p></div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TAGS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Tags — estados</p>
+    <div class="row" style="align-items:center">
+      <span class="tag tag-neutral">Neutro</span>
+      <span class="tag tag-success">Desafiar</span>
+      <span class="tag tag-warning">Acompanhar</span>
+      <span class="tag tag-danger">Intervir</span>
+      <span class="tag tag-info">Info</span>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BORDAS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Bordas</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:var(--border-primary)"></div><div class="swatch-info"><p class="swatch-name"><span>--border-primary</span><button class="copy-btn" onclick="copyToken('--border-primary')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#abb3c4</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--border-secondary)"></div><div class="swatch-info"><p class="swatch-name"><span>--border-secondary</span><button class="copy-btn" onclick="copyToken('--border-secondary')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#d2d9e5</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--border-active)"></div><div class="swatch-info"><p class="swatch-name"><span>--border-active</span><button class="copy-btn" onclick="copyToken('--border-active')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#3b9bde</p></div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TEXTO
+       ========================================================= -->
+  <section>
+    <p class="section-title">Texto</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:var(--text-body)"></div><div class="swatch-info"><p class="swatch-name"><span>--text-body</span><button class="copy-btn" onclick="copyToken('--text-body')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#232831</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--text-caption)"></div><div class="swatch-info"><p class="swatch-name"><span>--text-caption</span><button class="copy-btn" onclick="copyToken('--text-caption')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#626c80</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--text-placeholder)"></div><div class="swatch-info"><p class="swatch-name"><span>--text-placeholder</span><button class="copy-btn" onclick="copyToken('--text-placeholder')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#808ca3</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--text-active)"></div><div class="swatch-info"><p class="swatch-name"><span>--text-active</span><button class="copy-btn" onclick="copyToken('--text-active')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#0460a1</p></div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ÍCONES
+       ========================================================= -->
+  <section>
+    <p class="section-title">Ícones</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:var(--icon-primary)"></div><div class="swatch-info"><p class="swatch-name"><span>--icon-primary</span><button class="copy-btn" onclick="copyToken('--icon-primary')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#39404d</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--icon-secondary)"></div><div class="swatch-info"><p class="swatch-name"><span>--icon-secondary</span><button class="copy-btn" onclick="copyToken('--icon-secondary')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#626c80</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--icon-active)"></div><div class="swatch-info"><p class="swatch-name"><span>--icon-active</span><button class="copy-btn" onclick="copyToken('--icon-active')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#0460a1</p></div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CHARTS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Charts</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:var(--chart-color-1)"></div><div class="swatch-info"><p class="swatch-name"><span>--chart-color-1</span><button class="copy-btn" onclick="copyToken('--chart-color-1')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#3ccc84</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--chart-color-2)"></div><div class="swatch-info"><p class="swatch-name"><span>--chart-color-2</span><button class="copy-btn" onclick="copyToken('--chart-color-2')" title="Copiar token">&#x2398;</button></p><p class="swatch-value">#3b9bde</p></div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SOMBRAS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Sombras</p>
+    <div class="row">
+      <div class="card shadow-card" style="width:200px">
+        <p class="shadow-label"><span class="label-md" style="margin:0">--shadow-xs</span><button class="copy-btn" onclick="copyToken('--shadow-xs')" title="Copiar token">&#x2398;</button></p>
+        <p class="caption" style="margin:var(--space-100) 0 0">0 1px 2px rgba(25,28,31,.15)</p>
+      </div>
+      <div class="card" style="width:200px">
+        <p class="label-md" style="margin:0">sem sombra</p>
+        <p class="caption" style="margin:var(--space-100) 0 0">referência</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ESPAÇAMENTOS
+       ========================================================= -->
+  <section>
+    <p class="section-title">Espaçamentos</p>
+    <div class="sizes">
+      <div class="size-item"><span>--space-100 · 2px</span><button class="copy-btn" onclick="copyToken('--space-100')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:2px;height:2px"></div></div>
+      <div class="size-item"><span>--space-200 · 4px</span><button class="copy-btn" onclick="copyToken('--space-200')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:4px;height:4px"></div></div>
+      <div class="size-item"><span>--space-300 · 8px</span><button class="copy-btn" onclick="copyToken('--space-300')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:8px;height:8px"></div></div>
+      <div class="size-item"><span>--space-400 · 12px</span><button class="copy-btn" onclick="copyToken('--space-400')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:12px;height:12px"></div></div>
+      <div class="size-item"><span>--space-500 · 16px</span><button class="copy-btn" onclick="copyToken('--space-500')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:16px;height:16px"></div></div>
+      <div class="size-item"><span>--space-600 · 24px</span><button class="copy-btn" onclick="copyToken('--space-600')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:24px;height:24px"></div></div>
+      <div class="size-item"><span>--space-700 · 32px</span><button class="copy-btn" onclick="copyToken('--space-700')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:32px;height:32px"></div></div>
+      <div class="size-item"><span>--space-800 · 48px</span><button class="copy-btn" onclick="copyToken('--space-800')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:48px;height:48px"></div></div>
+      <div class="size-item"><span>--space-900 · 64px</span><button class="copy-btn" onclick="copyToken('--space-900')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:64px;height:64px"></div></div>
+      <div class="size-item"><span>--space-1000 · 80px</span><button class="copy-btn" onclick="copyToken('--space-1000')" title="Copiar token">&#x2398;</button><div class="size-box" style="width:80px;height:80px"></div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       INPUTS & BOTÕES
+       ========================================================= -->
+  <section>
+    <p class="section-title">Inputs &amp; Botões</p>
+    <div class="card" style="max-width:440px; display:grid; gap:var(--space-400)">
+      <input class="input" placeholder="Placeholder text" />
+      <input class="input" value="Texto preenchido" />
+      <div class="row">
+        <button class="btn">Enviar redação</button>
+        <button class="btn secondary">Voltar</button>
+      </div>
+    </div>
+  </section>
+
+  </div><!-- /.page -->
+</div><!-- /.layout -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+  function copyToken(token) {
+    navigator.clipboard.writeText(token).then(() => {
+      // feedback on the button
+      const btn = event.currentTarget;
+      btn.classList.add('copied');
+      btn.textContent = '✓';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '&#x2398;';
+      }, 1500);
+
+      // toast
+      const toast = document.getElementById('toast');
+      toast.textContent = token + ' copiado';
+      toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  }
+</script>
+</body>
+</html>

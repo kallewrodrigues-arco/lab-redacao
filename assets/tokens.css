@@ -1,0 +1,315 @@
+/* =============================================================================
+   Lab Redação — Design Tokens
+   Source: Figma fileKey vpzLKRxOEyevThhXA8HAGE via get_variable_defs
+   Updated: 2026-04-07
+   ============================================================================= */
+
+:root {
+
+  /* ---------------------------------------------------------------------------
+     SPACING
+     Scale: 0 | 2 | 4 | 8 | 12 | 16 | 24 | 32 | 48 | 64 | 80
+     --------------------------------------------------------------------------- */
+  --space-0:    0px;
+  --space-100:  2px;
+  --space-200:  4px;
+  --space-300:  8px;
+  --space-400:  12px;
+  --space-500:  16px;
+  --space-600:  24px;
+  --space-700:  32px;
+  --space-800:  48px;
+  --space-900:  64px;
+  --space-1000: 80px;
+
+  /* ---------------------------------------------------------------------------
+     BORDER RADIUS
+     --------------------------------------------------------------------------- */
+  --radius-none: 0px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-pill: 9999px;
+
+  /* ---------------------------------------------------------------------------
+     TYPOGRAPHY — Font family & weights
+     --------------------------------------------------------------------------- */
+  --font-family-title:    Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+
+  /* ---------------------------------------------------------------------------
+     TYPOGRAPHY — Font sizes
+     Figma source: Text/Heading/* + Text/Label/* + Text/Body/* + Text/Caption/*
+     --------------------------------------------------------------------------- */
+  --font-size-xs:  11px;   /* componentes internos (chips, badges pequenas) */
+  --font-size-sm:  14px;   /* Caption, Label/Small, Text/Body/Small */
+  --font-size-md:  16px;   /* Body/Medium, Label/Medium — alias de --font-size-base */
+  --font-size-base: 16px;  /* mantido por compatibilidade */
+  --font-size-lg:  18px;   /* Heading/Small, Label/Large */
+  --font-size-xl:  20px;   /* Heading/Medium */
+  --font-size-2xl: 24px;   /* Heading/Large */
+  --font-size-3xl: 28px;   /* Heading/X-Large (corrigido de 32 → 28) */
+  --font-size-4xl: 32px;   /* Display (era --font-size-3xl antes da correção) */
+
+  /* ---------------------------------------------------------------------------
+     TYPOGRAPHY — Line heights
+     --------------------------------------------------------------------------- */
+  --line-height-tight:  1.25;  /* Heading, Caption */
+  --line-height-normal: 1.5;   /* Body, Label */
+  /* Legados (px) mantidos para compatibilidade */
+  --line-height-4:  16px;
+  --line-height-6:  24px;
+  --line-height-10: 40px;
+
+  /* ---------------------------------------------------------------------------
+     TYPOGRAPHY — Letter spacing
+     Figma source: Component/Heading/Letter Spacing + Component/Caption/Letter Spacing
+     --------------------------------------------------------------------------- */
+  --letter-spacing-tight:  -0.2px;  /* Heading/* */
+  --letter-spacing-normal:  0px;    /* Body, Label */
+  --letter-spacing-wide:    0.2px;  /* Caption */
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Backgrounds (light theme)
+     --------------------------------------------------------------------------- */
+  --bg-primary:           #ffffff;
+  --bg-secondary:         #f5f7fa;
+  --bg-hover:             #ebeff7;
+  --bg-active:            #cceaff;
+  --bg-active-hover:      #8cafff;
+  --bg-fade-opaque:       rgba(255, 255, 255, 0.98);
+  --bg-fade-transparent:  rgba(255, 255, 255, 0);
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Borders
+     --------------------------------------------------------------------------- */
+  --border-primary:   #abb3c4;
+  --border-secondary: #d2d9e5;
+  --border-active:    #3b9bde;
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Text
+     --------------------------------------------------------------------------- */
+  --text-body:        #232831;
+  --text-heading:     var(--text-body);
+  --text-label:       var(--text-body);
+  --text-caption:     #626c80;
+  --text-placeholder: #808ca3;
+  --text-read-only:   #626c80;
+  --text-on-color:    #ffffff;
+  --text-active:      #0460a1;
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Icons
+     --------------------------------------------------------------------------- */
+  --icon-primary:   #39404d;
+  --icon-secondary: #626c80;
+  --icon-active:    #0460a1;
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Semantic: Success
+     --------------------------------------------------------------------------- */
+  --color-success-text:   #0c7742;
+  --color-success-bg:     #ccffe6;
+  --color-success-bg-tag: #a8f7d0;
+  --color-success-icon:   #109954;
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Semantic: Warning
+     --------------------------------------------------------------------------- */
+  --color-warning-text:   #a05100;
+  --color-warning-bg-tag: #ffe1a6;
+  --color-warning-icon:   #b26b07;
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Semantic: Danger
+     --------------------------------------------------------------------------- */
+  --color-danger-text:   #a10e00;
+  --color-danger-bg-tag: #ffada6;
+  --color-danger-icon:   #b32518;
+
+  /* ---------------------------------------------------------------------------
+     COLORS — Semantic: Info
+     --------------------------------------------------------------------------- */
+  --color-info-text:   #0f5384;
+  --color-info-bg-tag: #d2d9e5;
+  --color-info-icon:   #0460a1;
+
+  /* ---------------------------------------------------------------------------
+     COMPONENT TOKENS — Tag
+     --------------------------------------------------------------------------- */
+  --tag-height-sm:   24px;
+  --tag-radius:      9999px;
+  --tag-text-neutral: #4d5666;
+  --tag-bg-neutral:  #d2d9e5;
+
+  /* ---------------------------------------------------------------------------
+     COMPONENT TOKENS — Tab
+     --------------------------------------------------------------------------- */
+  --tab-text-active:   #232831;
+  --tab-border-active: #0079ce;
+
+  /* ---------------------------------------------------------------------------
+     COMPONENT TOKENS — Button
+     --------------------------------------------------------------------------- */
+  --btn-height-md:  44px;
+  --btn-radius:     8px;
+
+  /* ---------------------------------------------------------------------------
+     COMPONENT TOKENS — Input
+     --------------------------------------------------------------------------- */
+  --input-height:   44px;
+  --input-radius:   8px;
+  --input-padding:  12px;
+
+  /* ---------------------------------------------------------------------------
+     SHADOWS
+     Figma source: X-Small effect token
+     --------------------------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px 0 rgba(25, 28, 31, 0.15);
+
+  /* ---------------------------------------------------------------------------
+     CHARTS
+     --------------------------------------------------------------------------- */
+  --chart-color-1: #3ccc84;
+  --chart-color-2: #3b9bde;
+}
+
+/* =============================================================================
+   DARK THEME
+   ============================================================================= */
+[data-theme="dark"] {
+  --bg-primary:          #161a30;
+  --bg-secondary:        #0d1121;
+  --bg-hover:            #2e3554;
+  --bg-active:           #0f5384;
+  --bg-active-hover:     #1a4a8a;
+
+  --border-primary:      #42496e;
+  --border-secondary:    #2e3554;
+  --border-active:       #3b9bde;
+
+  --text-body:           #ffffff;
+  --text-caption:        #aeb4d3;
+  --text-placeholder:    #9097bf;
+  --text-read-only:      #aeb4d3;
+  --text-active:         #acdcfc;
+
+  --icon-primary:        #f5f6fa;
+  --icon-secondary:      #aeb4d3;
+  --icon-active:         #acdcfc;
+}
+
+/* =============================================================================
+   PREVIEW STYLES (tokens.html only)
+   ============================================================================= */
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-family-title);
+  background: var(--bg-secondary);
+  color: var(--text-body);
+  font-size: var(--font-size-md);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-800);
+  display: grid;
+  gap: var(--space-700);
+}
+
+.section-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-heading);
+  margin: 0 0 var(--space-400);
+  padding-bottom: var(--space-300);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.row { display: flex; flex-wrap: wrap; gap: var(--space-500); }
+
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-600);
+}
+
+/* Typography samples */
+.type-sample { margin: var(--space-300) 0; }
+.type-label  { font-size: var(--font-size-xs); color: var(--text-caption); margin-bottom: var(--space-100); }
+
+.heading-xl  { font-size: var(--font-size-4xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); margin: 0; }
+.heading-3xl { font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); margin: 0; }
+.heading-2xl { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); margin: 0; }
+.heading-xl-t{ font-size: var(--font-size-xl);  font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); margin: 0; }
+.heading-lg  { font-size: var(--font-size-lg);  font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); margin: 0; }
+.label-lg    { font-size: var(--font-size-lg);  font-weight: var(--font-weight-medium);   line-height: var(--line-height-normal); margin: 0; }
+.label-md    { font-size: var(--font-size-md);  font-weight: var(--font-weight-medium);   line-height: var(--line-height-normal); margin: 0; }
+.label-sm    { font-size: var(--font-size-sm);  font-weight: var(--font-weight-medium);   line-height: var(--line-height-normal); margin: 0; }
+.body-md     { font-size: var(--font-size-md);  font-weight: var(--font-weight-regular);  line-height: var(--line-height-normal); margin: 0; }
+.caption     { font-size: var(--font-size-sm);  font-weight: var(--font-weight-regular);  line-height: var(--line-height-tight);  letter-spacing: var(--letter-spacing-wide); color: var(--text-caption); margin: 0; }
+
+/* Color swatches */
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-400); }
+.swatch {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-secondary);
+  font-size: var(--font-size-xs);
+}
+.swatch-color { height: 48px; }
+.swatch-info  { padding: var(--space-200) var(--space-300); background: var(--bg-primary); }
+.swatch-name  { font-weight: var(--font-weight-medium); color: var(--text-body); }
+.swatch-value { color: var(--text-caption); letter-spacing: var(--letter-spacing-wide); }
+
+/* Tags */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: var(--tag-height-sm);
+  padding: 0 var(--space-300);
+  border-radius: var(--tag-radius);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+}
+.tag-neutral { background: var(--tag-bg-neutral);     color: var(--tag-text-neutral); }
+.tag-success { background: var(--color-success-bg-tag); color: var(--color-success-text); }
+.tag-warning { background: var(--color-warning-bg-tag); color: var(--color-warning-text); }
+.tag-danger  { background: var(--color-danger-bg-tag);  color: var(--color-danger-text); }
+.tag-info    { background: var(--color-info-bg-tag);    color: var(--color-info-text); }
+
+/* Sizes */
+.sizes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-400); margin-top: var(--space-400); }
+.size-item { display: grid; gap: var(--space-100); align-items: center; font-size: var(--font-size-xs); color: var(--text-caption); }
+.size-box  { background: var(--bg-active); border-radius: var(--radius-sm); min-width: 1px; min-height: 1px; }
+
+/* Shadow */
+.shadow-card { box-shadow: var(--shadow-xs); }
+
+/* Inputs & buttons (legacy) */
+.input {
+  width: 100%; padding: var(--space-300) var(--space-400);
+  border-radius: var(--input-radius); border: 1px solid var(--border-primary);
+  background: var(--bg-primary); color: var(--text-body);
+  font-size: var(--font-size-md); outline: none; height: var(--input-height);
+  box-sizing: border-box;
+}
+.input::placeholder { color: var(--text-placeholder); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-200); padding: 0 var(--space-500);
+  height: var(--btn-height-md); border-radius: var(--btn-radius);
+  border: 1px solid var(--border-primary); background: var(--bg-active);
+  color: var(--text-on-color); font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-md); cursor: pointer;
+}
+.btn.secondary { background: transparent; color: var(--text-body); }

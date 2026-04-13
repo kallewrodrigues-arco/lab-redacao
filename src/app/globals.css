@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   Lab Redação — Global Styles + Design Tokens
+   Source: Figma fileKey vpzLKRxOEyevThhXA8HAGE via get_variable_defs
+   Updated: 2026-04-07
+   ============================================================================= */
+
+:root {
+
+  /* Spacing */
+  --space-0:    0px;
+  --space-100:  2px;
+  --space-200:  4px;
+  --space-300:  8px;
+  --space-400:  12px;
+  --space-500:  16px;
+  --space-600:  24px;
+  --space-700:  32px;
+  --space-800:  48px;
+  --space-900:  64px;
+  --space-1000: 80px;
+
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-pill: 9999px;
+
+  /* Typography — family & weights */
+  --font-family-title:    Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+
+  /* Typography — font sizes */
+  --font-size-xs:   11px;
+  --font-size-sm:   14px;   /* Caption, Label/Small */
+  --font-size-md:   16px;   /* Body/Medium, Label/Medium */
+  --font-size-base: 16px;   /* alias for compatibility */
+  --font-size-lg:   18px;   /* Heading/Small, Label/Large */
+  --font-size-xl:   20px;   /* Heading/Medium */
+  --font-size-2xl:  24px;   /* Heading/Large */
+  --font-size-3xl:  28px;   /* Heading/X-Large (Figma: Text/Heading/Font Size/X-Large) */
+  --font-size-4xl:  32px;   /* Display */
+
+  /* Typography — line heights */
+  --line-height-tight:  1.25;
+  --line-height-normal: 1.5;
+  --line-height-4:  16px; /* legacy */
+  --line-height-6:  24px; /* legacy */
+  --line-height-10: 40px; /* legacy */
+
+  /* Typography — letter spacing */
+  --letter-spacing-tight:  -0.2px;
+  --letter-spacing-normal:  0px;
+  --letter-spacing-wide:    0.2px;
+
+  /* Backgrounds */
+  --bg-primary:          #ffffff;
+  --bg-secondary:        #f5f7fa;
+  --bg-hover:            #ebeff7;
+  --bg-active:           #cceaff;
+  --bg-active-hover:     #8cafff;
+
+  /* Borders */
+  --border-primary:   #abb3c4;
+  --border-secondary: #d2d9e5;
+  --border-active:    #3b9bde;
+
+  /* Text */
+  --text-body:        #232831;
+  --text-heading:     var(--text-body);
+  --text-label:       var(--text-body);
+  --text-caption:     #626c80;
+  --text-placeholder: #808ca3;
+  --text-read-only:   #626c80;
+  --text-on-color:    #ffffff;
+  --text-active:      #0460a1;
+
+  /* Icons */
+  --icon-primary:   #39404d;
+  --icon-secondary: #626c80;
+  --icon-active:    #0460a1;
+
+  /* Semantic — Success */
+  --color-success-text:   #0c7742;
+  --color-success-bg:     #ccffe6;
+  --color-success-bg-tag: #a8f7d0;
+  --color-success-icon:   #109954;
+
+  /* Semantic — Warning */
+  --color-warning-text:   #a05100;
+  --color-warning-bg-tag: #ffe1a6;
+  --color-warning-icon:   #b26b07;
+
+  /* Semantic — Danger */
+  --color-danger-text:    #a10e00;
+  --color-danger-bg-tag:  #ffada6;
+  --color-danger-icon:    #b32518;
+
+  /* Semantic — Info */
+  --color-info-text:   #0f5384;
+  --color-info-bg-tag: #d2d9e5;
+  --color-info-icon:   #0460a1;
+
+  /* Legacy named colours (kept for compatibility) */
+  --color-blue:         #0079ce;
+  --color-blue-dark:    #0460a1;
+  --color-blue-light:   #cceaff;
+  --color-green:        #0c7742;
+  --color-green-light:  #ccffe6;
+  --color-orange:       #a05100;
+  --color-orange-light: #ffe1a6;
+  --color-red:          #a10e00;
+  --color-red-light:    #ffada6;
+  --color-purple:       #6b21a8;
+  --color-purple-light: #f3e8ff;
+
+  /* Component — Tag */
+  --tag-height-sm:    24px;
+  --tag-radius:       9999px;
+  --tag-text-neutral: #4d5666;
+  --tag-bg-neutral:   #d2d9e5;
+
+  /* Component — Tab */
+  --tab-text-active:   #232831;
+  --tab-border-active: #0079ce;
+
+  /* Component — Button */
+  --btn-height-md: 44px;
+  --btn-radius:    8px;
+
+  /* Component — Input */
+  --input-height:  44px;
+  --input-radius:  8px;
+  --input-padding: 12px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(25, 28, 31, 0.15);
+
+  /* Charts */
+  --chart-color-1: #3ccc84;
+  --chart-color-2: #3b9bde;
+}
+
+[data-theme="dark"] {
+  --bg-primary:       #161a30;
+  --bg-secondary:     #0d1121;
+  --bg-hover:         #2e3554;
+  --bg-active:        #0f5384;
+  --bg-active-hover:  #1a4a8a;
+  --border-primary:   #42496e;
+  --border-secondary: #2e3554;
+  --border-active:    #3b9bde;
+  --text-body:        #ffffff;
+  --text-caption:     #aeb4d3;
+  --text-placeholder: #9097bf;
+  --text-read-only:   #aeb4d3;
+  --text-active:      #acdcfc;
+  --icon-primary:     #f5f6fa;
+  --icon-secondary:   #aeb4d3;
+  --icon-active:      #acdcfc;
+}
+
+/* =============================================================================
+   Tokens de cor primária por marca (sobrescreve --color-primary conforme marca)
+   ============================================================================= */
+
+:root {
+  /* Padrão SAS — sobrescrito pelo data-marca quando necessário */
+  --color-primary:       #0D4AD6;
+  --color-primary-hover: #0035B2;
+}
+
+[data-marca="sas"] {
+  --color-primary:            #0D4AD6;
+  --color-primary-hover:      #0035B2;
+  --sidebar-item-active-bg:   #c7d8ff;
+  --sidebar-item-active-text: #0035b2;
+  --sidebar-home-fill:        #8cafff;
+  --sidebar-home-stroke:      #0035b2;
+}
+
+[data-marca="coc"] {
+  --color-primary:            #007724;
+  --color-primary-hover:      #035816;
+  --sidebar-item-active-bg:   #edffd6;
+  --sidebar-item-active-text: #007724;
+  --sidebar-home-fill:        #a8f7d0;
+  --sidebar-home-stroke:      #007724;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-family-title);
+  background: var(--bg-primary);
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+}

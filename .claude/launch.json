@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lab-redacao (Next.js dev)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "lab-redacao (assets static)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "assets", "--listen", "4000", "--no-clipboard"],
+      "port": 4000
+    }
+  ]
+}

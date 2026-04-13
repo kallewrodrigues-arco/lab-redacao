@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Redação — Buttons</title>
+  <link rel="stylesheet" href="../tokens.css" />
+  <style>
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      align-items: flex-start;
+    }
+
+    /* ── Sidebar ────────────────────────────────────────────────── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      width: 240px;
+      min-width: 240px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #ebeff7;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #626c80;
+      text-decoration: none;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .sidebar-nav-item:hover { background: #f5f7fa; color: #39404d; }
+    .sidebar-nav-item.active { background: #c7d8ff; color: #0035b2; }
+    .sidebar-section-label {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #abb3c4;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* ── Page / content ─────────────────────────────────────────── */
+    .page {
+      flex: 1;
+      margin: 0;
+      padding: var(--space-800);
+      display: grid;
+      gap: var(--space-700);
+    }
+
+    /* ── Section titles ─────────────────────────────────────────── */
+    .section-title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-heading);
+      margin: 0 0 var(--space-400);
+      padding-bottom: var(--space-300);
+      border-bottom: 1px solid var(--border-secondary);
+    }
+    .section-subtitle {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-caption);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 12px;
+    }
+
+    /* ── Showcase table ─────────────────────────────────────────── */
+    .showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .showcase-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 90px repeat(5, 1fr);
+      gap: 0;
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .showcase-grid.on-dark {
+      background: #232831;
+    }
+
+    .grid-header {
+      background: var(--bg-secondary);
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-caption);
+      letter-spacing: 0.3px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+    .grid-header.row-label {
+      text-align: left;
+    }
+    .on-dark .grid-header {
+      background: #2e3441;
+      color: #8895aa;
+      border-bottom-color: #3d4657;
+    }
+
+    .grid-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 12px;
+      border-bottom: 1px solid var(--border-secondary);
+      border-right: 1px solid var(--border-secondary);
+    }
+    .grid-cell:last-child,
+    .grid-cell.no-border-right { border-right: none; }
+    .grid-row:last-child .grid-cell { border-bottom: none; }
+
+    .on-dark .grid-cell { border-color: #3d4657; }
+
+    .grid-cell.row-label {
+      justify-content: flex-start;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-caption);
+      background: var(--bg-secondary);
+    }
+    .on-dark .grid-cell.row-label {
+      background: #2e3441;
+      color: #8895aa;
+    }
+
+    /* ── Spinner animation ──────────────────────────────────────── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(171, 179, 196, 0.4);
+      border-top-color: #abb3c4;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      display: block;
+      flex-shrink: 0;
+    }
+    .btn-spinner.sm {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       BUTTON COMPONENT
+       ══════════════════════════════════════════════════════════════ */
+    :root {
+      --btn-radius: 8px;
+      --btn-focus-radius: 10px;
+
+      /* Primary */
+      --btn-primary-bg:          #0079ce;
+      --btn-primary-bg-hover:    #0460a1;
+      --btn-primary-bg-pressed:  #0f5384;
+      --btn-primary-bg-disabled: #d2d9e5;
+      --btn-primary-text:        #ffffff;
+      --btn-primary-text-disabled: #abb3c4;
+
+      /* Secondary */
+      --btn-secondary-bg:          #ffffff;
+      --btn-secondary-bg-hover:    #ebeff7;
+      --btn-secondary-bg-pressed:  #d2d9e5;
+      --btn-secondary-bg-disabled: #ffffff;
+      --btn-secondary-border:      #abb3c4;
+      --btn-secondary-border-hover: #abb3c4;
+      --btn-secondary-border-disabled: #d2d9e5;
+      --btn-secondary-text:        #626c80;
+      --btn-secondary-text-disabled: #abb3c4;
+
+      /* Tertiary */
+      --btn-tertiary-bg:          transparent;
+      --btn-tertiary-bg-hover:    rgba(115,127,186,0.14);
+      --btn-tertiary-bg-pressed:  rgba(92,103,161,0.26);
+      --btn-tertiary-text:        #626c80;
+      --btn-tertiary-text-disabled: #abb3c4;
+
+      /* Danger — Primary */
+      --btn-danger-bg:          #d92f20;
+      --btn-danger-bg-hover:    #b32518;
+      --btn-danger-bg-pressed:  #8c1c10;
+      --btn-danger-bg-disabled: #d2d9e5;
+      --btn-danger-text:        #ffffff;
+      --btn-danger-text-disabled: #abb3c4;
+
+      /* Danger — Secondary */
+      --btn-danger-sec-bg:          #ffffff;
+      --btn-danger-sec-bg-hover:    #fff0ee;
+      --btn-danger-sec-bg-pressed:  #ffccc8;
+      --btn-danger-sec-border:      #d92f20;
+      --btn-danger-sec-text:        #d92f20;
+      --btn-danger-sec-text-disabled: #abb3c4;
+
+      /* Danger — Tertiary */
+      --btn-danger-ter-text:        #d92f20;
+    }
+
+    /* ── Base ───────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: var(--btn-radius);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0;
+      white-space: nowrap;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+
+    /* Focus ring */
+    .btn:focus-visible::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border: 3px solid #0079ce;
+      border-radius: var(--btn-focus-radius);
+      pointer-events: none;
+    }
+
+    /* ── Sizes ──────────────────────────────────────────────────── */
+    .btn-md {
+      min-height: 44px;
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+    .btn-sm {
+      min-height: 32px;
+      padding: 4px 12px;
+      font-size: 14px;
+    }
+
+    /* Icon only */
+    .btn-icon-only.btn-md { min-width: 44px; padding: 0; }
+    .btn-icon-only.btn-sm { min-width: 32px; padding: 0; }
+
+    /* Tertiary icon-only — larger touch targets per Figma */
+    .btn-tertiary.btn-icon-only.btn-md {
+      min-width: 56px;
+      min-height: 56px;
+      padding: 16px;
+    }
+    .btn-tertiary.btn-icon-only.btn-sm {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 12px;
+    }
+
+    /* Icons inside button */
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .btn-sm .btn-icon {
+      width: 16px;
+      height: 16px;
+    }
+    /* Tertiary icon-only uses larger icons than labeled sm */
+    .btn-tertiary.btn-icon-only.btn-sm .btn-icon { width: 20px; height: 20px; }
+    .btn-tertiary.btn-icon-only.btn-md .btn-icon { width: 24px; height: 24px; }
+    .btn-icon svg { display: block; }
+
+    /* ── Primary ────────────────────────────────────────────────── */
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+    }
+    .btn-primary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: var(--btn-primary-bg-hover);
+    }
+    .btn-primary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-primary.btn-pressed {
+      background: var(--btn-primary-bg-pressed);
+    }
+    .btn-primary:disabled,
+    .btn-primary.btn-disabled {
+      background: var(--btn-primary-bg-disabled);
+      color: var(--btn-primary-text-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ── Secondary ──────────────────────────────────────────────── */
+    .btn-secondary {
+      background: var(--btn-secondary-bg);
+      color: var(--btn-secondary-text);
+      border: 1px solid var(--btn-secondary-border);
+    }
+    .btn-secondary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: var(--btn-secondary-bg-hover);
+      border-color: var(--btn-secondary-border-hover);
+    }
+    .btn-secondary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-secondary.btn-pressed {
+      background: var(--btn-secondary-bg-pressed);
+    }
+    .btn-secondary:disabled,
+    .btn-secondary.btn-disabled {
+      background: var(--btn-secondary-bg-disabled);
+      color: var(--btn-secondary-text-disabled);
+      border-color: var(--btn-secondary-border-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ── Tertiary ───────────────────────────────────────────────── */
+    .btn-tertiary {
+      background: var(--btn-tertiary-bg);
+      color: var(--btn-tertiary-text);
+    }
+    .btn-tertiary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: var(--btn-tertiary-bg-hover);
+    }
+    .btn-tertiary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-tertiary.btn-pressed {
+      background: var(--btn-tertiary-bg-pressed);
+    }
+    .btn-tertiary:disabled,
+    .btn-tertiary.btn-disabled {
+      color: var(--btn-tertiary-text-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ── Danger / Primary ───────────────────────────────────────── */
+    .btn-danger {
+      background: var(--btn-danger-bg);
+      color: var(--btn-danger-text);
+    }
+    .btn-danger:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: var(--btn-danger-bg-hover);
+    }
+    .btn-danger:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-danger.btn-pressed {
+      background: var(--btn-danger-bg-pressed);
+    }
+    .btn-danger:disabled,
+    .btn-danger.btn-disabled {
+      background: var(--btn-danger-bg-disabled);
+      color: var(--btn-danger-text-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ── Danger / Secondary ─────────────────────────────────────── */
+    .btn-danger-secondary {
+      background: var(--btn-danger-sec-bg);
+      color: var(--btn-danger-sec-text);
+      border: 1px solid var(--btn-danger-sec-border);
+    }
+    .btn-danger-secondary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: var(--btn-danger-sec-bg-hover);
+    }
+    .btn-danger-secondary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-danger-secondary.btn-pressed {
+      background: var(--btn-danger-sec-bg-pressed);
+    }
+    .btn-danger-secondary:disabled,
+    .btn-danger-secondary.btn-disabled {
+      color: var(--btn-danger-sec-text-disabled);
+      border-color: var(--btn-secondary-border-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ── Danger / Tertiary ──────────────────────────────────────── */
+    .btn-danger-tertiary {
+      background: transparent;
+      color: var(--btn-danger-ter-text);
+    }
+    .btn-danger-tertiary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: #fff0ee;
+    }
+    .btn-danger-tertiary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-danger-tertiary.btn-pressed {
+      background: #ffccc8;
+    }
+    .btn-danger-tertiary:disabled,
+    .btn-danger-tertiary.btn-disabled {
+      color: var(--btn-tertiary-text-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ── Loading (all variants) ─────────────────────────────────── */
+    .btn-loading {
+      background: var(--btn-primary-bg-disabled) !important;
+      border-color: transparent !important;
+      color: transparent !important;
+      cursor: default;
+      pointer-events: none;
+    }
+    .btn-loading .btn-icon,
+    .btn-loading .btn-label { opacity: 0; }
+
+    /* Inverse variants */
+    .btn-inverse-tertiary {
+      background: transparent;
+      color: #ffffff;
+    }
+    .btn-inverse-tertiary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: rgba(255,255,255,0.12);
+    }
+    .btn-inverse-tertiary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-inverse-tertiary.btn-pressed {
+      background: rgba(255,255,255,0.2);
+    }
+    .btn-inverse-tertiary:disabled,
+    .btn-inverse-tertiary.btn-disabled {
+      color: rgba(255,255,255,0.35);
+      cursor: not-allowed;
+    }
+
+    .btn-inverse-secondary {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .btn-inverse-secondary:hover:not(:disabled):not(.btn-disabled):not(.btn-loading) {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.6);
+    }
+    .btn-inverse-secondary:active:not(:disabled):not(.btn-disabled):not(.btn-loading),
+    .btn-inverse-secondary.btn-pressed {
+      background: rgba(255,255,255,0.2);
+    }
+    .btn-inverse-secondary:disabled,
+    .btn-inverse-secondary.btn-disabled {
+      color: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.2);
+      cursor: not-allowed;
+    }
+
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <a href="../tokens.html" class="sidebar-nav-item">Tokens</a>
+    <div class="sidebar-section-label">Componentes</div>
+    <a href="buttons.html" class="sidebar-nav-item active">Buttons</a>
+    <a href="icons.html" class="sidebar-nav-item">Icons</a>
+  </nav>
+
+  <!-- ── Main content ─────────────────────────────────────────── -->
+  <div class="page">
+
+    <!-- =========================================================
+         PRIMARY
+         ========================================================= -->
+    <section>
+      <p class="section-title">Primary</p>
+      <div class="showcase">
+
+        <!-- With label -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Com label</p>
+          <div class="showcase-grid">
+            <!-- Headers -->
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <!-- Medium row -->
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary">
+                <span class="btn-icon"><?xml version="1.0"?><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary" style="background:var(--btn-primary-bg-hover)">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-pressed">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-disabled" disabled>
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-loading" aria-label="Carregando">
+                <span class="btn-spinner"></span>
+              </button>
+            </div>
+
+            <!-- Small row -->
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary" style="background:var(--btn-primary-bg-hover)">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-pressed">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary" disabled>
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-loading" aria-label="Carregando">
+                <span class="btn-spinner sm"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Icon only -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Somente ícone</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-icon-only" aria-label="Ação">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-icon-only" style="background:var(--btn-primary-bg-hover)" aria-label="Ação">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-icon-only btn-pressed" aria-label="Ação">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-icon-only" disabled aria-label="Ação">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-primary btn-icon-only btn-loading" aria-label="Carregando">
+                <span class="btn-spinner"></span>
+              </button>
+            </div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-icon-only" aria-label="Ação">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-icon-only" style="background:var(--btn-primary-bg-hover)" aria-label="Ação">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-icon-only btn-pressed" aria-label="Ação">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-icon-only" disabled aria-label="Ação">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-primary btn-icon-only btn-loading" aria-label="Carregando">
+                <span class="btn-spinner sm"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECONDARY
+         ========================================================= -->
+    <section>
+      <p class="section-title">Secondary</p>
+      <div class="showcase">
+        <div class="showcase-block">
+          <p class="section-subtitle">Com label</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-secondary">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-secondary" style="background:var(--btn-secondary-bg-hover)">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-secondary btn-pressed">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-secondary" disabled>
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-secondary btn-loading" aria-label="Carregando">
+                <span class="btn-spinner"></span>
+              </button>
+            </div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-secondary">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-secondary" style="background:var(--btn-secondary-bg-hover)">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-secondary btn-pressed">
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-secondary" disabled>
+                <span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="btn-label">Button</span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-secondary btn-loading" aria-label="Carregando">
+                <span class="btn-spinner sm"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Icon only -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Somente ícone</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell"><button class="btn btn-md btn-secondary btn-icon-only" aria-label="Ação"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-secondary btn-icon-only" style="background:var(--btn-secondary-bg-hover)" aria-label="Ação"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-secondary btn-icon-only btn-pressed" aria-label="Ação"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-secondary btn-icon-only" disabled aria-label="Ação"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-secondary btn-icon-only btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell"><button class="btn btn-sm btn-secondary btn-icon-only" aria-label="Ação"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-secondary btn-icon-only" style="background:var(--btn-secondary-bg-hover)" aria-label="Ação"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-secondary btn-icon-only btn-pressed" aria-label="Ação"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-secondary btn-icon-only" disabled aria-label="Ação"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-secondary btn-icon-only btn-loading" aria-label="Carregando"><span class="btn-spinner sm"></span></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         TERTIARY
+         ========================================================= -->
+    <section>
+      <p class="section-title">Tertiary</p>
+      <div class="showcase">
+        <div class="showcase-block">
+          <p class="section-subtitle">Com label</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell"><button class="btn btn-md btn-tertiary"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-tertiary" style="background:var(--btn-tertiary-bg-hover)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-tertiary btn-pressed"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-tertiary" disabled><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-tertiary btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell"><button class="btn btn-sm btn-tertiary"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-tertiary" style="background:var(--btn-tertiary-bg-hover)"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-tertiary btn-pressed"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-tertiary" disabled><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-tertiary btn-loading" aria-label="Carregando"><span class="btn-spinner sm"></span></button></div>
+          </div>
+        </div>
+
+        <!-- ── Icon only ──────────────────────────────────────────── -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Somente ícone</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-tertiary btn-icon-only" aria-label="Mais opções">
+                <span class="btn-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 12h.01M12 12h.01M18 12h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-tertiary btn-icon-only" style="background:var(--btn-tertiary-bg-hover)" aria-label="Mais opções">
+                <span class="btn-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 12h.01M12 12h.01M18 12h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-tertiary btn-icon-only btn-pressed" aria-label="Mais opções">
+                <span class="btn-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 12h.01M12 12h.01M18 12h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-tertiary btn-icon-only" disabled aria-label="Mais opções">
+                <span class="btn-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 12h.01M12 12h.01M18 12h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-md btn-tertiary btn-icon-only btn-loading" aria-label="Carregando">
+                <span class="btn-spinner"></span>
+              </button>
+            </div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-tertiary btn-icon-only" aria-label="Mais opções">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 10h.01M10 10h.01M15 10h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-tertiary btn-icon-only" style="background:var(--btn-tertiary-bg-hover)" aria-label="Mais opções">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 10h.01M10 10h.01M15 10h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-tertiary btn-icon-only btn-pressed" aria-label="Mais opções">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 10h.01M10 10h.01M15 10h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-tertiary btn-icon-only" disabled aria-label="Mais opções">
+                <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 10h.01M10 10h.01M15 10h.01"/></svg></span>
+              </button>
+            </div>
+            <div class="grid-cell">
+              <button class="btn btn-sm btn-tertiary btn-icon-only btn-loading" aria-label="Carregando">
+                <span class="btn-spinner sm"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         DANGER
+         ========================================================= -->
+    <section>
+      <p class="section-title">Danger</p>
+      <div class="showcase">
+
+        <!-- Danger Primary -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Primary</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger" style="background:var(--btn-danger-bg-hover)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger btn-pressed"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger" disabled><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger" style="background:var(--btn-danger-bg-hover)"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger btn-pressed"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger" disabled><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger btn-loading" aria-label="Carregando"><span class="btn-spinner sm"></span></button></div>
+          </div>
+        </div>
+
+        <!-- Danger Secondary -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Secondary</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-secondary"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-secondary" style="background:var(--btn-danger-sec-bg-hover)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-secondary btn-pressed"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-secondary" disabled><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-secondary btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-secondary"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-secondary" style="background:var(--btn-danger-sec-bg-hover)"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-secondary btn-pressed"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-secondary" disabled><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-secondary btn-loading" aria-label="Carregando"><span class="btn-spinner sm"></span></button></div>
+          </div>
+        </div>
+
+        <!-- Danger Tertiary -->
+        <div class="showcase-block">
+          <p class="section-subtitle">Tertiary</p>
+          <div class="showcase-grid">
+            <div class="grid-header row-label"></div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-tertiary"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-tertiary" style="background:#fff0ee"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-tertiary" style="background:#ffccc8"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-tertiary" disabled><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-danger-tertiary btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+
+            <div class="grid-cell row-label">Small</div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-tertiary"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-tertiary" style="background:#fff0ee"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-tertiary" style="background:#ffccc8"><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-tertiary" disabled><span class="btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".5"/><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-sm btn-danger-tertiary btn-loading" aria-label="Carregando"><span class="btn-spinner sm"></span></button></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         INVERSE (fundo escuro)
+         ========================================================= -->
+    <section>
+      <p class="section-title">Inverse</p>
+      <div class="showcase">
+        <div class="showcase-block">
+          <p class="section-subtitle">Secondary &amp; Tertiary sobre fundo escuro</p>
+          <div class="showcase-grid on-dark">
+            <div class="grid-header row-label">Secondary</div>
+            <div class="grid-header">Default</div>
+            <div class="grid-header">Hover</div>
+            <div class="grid-header">Pressed</div>
+            <div class="grid-header">Disabled</div>
+            <div class="grid-header">Loading</div>
+
+            <div class="grid-cell row-label">Medium</div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-secondary"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-secondary" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.6)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-secondary" style="background:rgba(255,255,255,0.2)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-secondary" disabled><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-secondary btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+
+            <div class="grid-cell row-label">Tertiary</div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-tertiary"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-tertiary" style="background:rgba(255,255,255,0.12)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-tertiary" style="background:rgba(255,255,255,0.2)"><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-tertiary" disabled><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor" opacity=".5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="btn-label">Button</span></button></div>
+            <div class="grid-cell"><button class="btn btn-md btn-inverse-tertiary btn-loading" aria-label="Carregando"><span class="btn-spinner"></span></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.page -->
+</div><!-- /.layout -->
+</body>
+</html>

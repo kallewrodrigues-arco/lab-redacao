@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Redação — Icons</title>
+  <link rel="stylesheet" href="../tokens.css" />
+  <style>
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      align-items: flex-start;
+    }
+
+    /* ── Sidebar ────────────────────────────────────────────────── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      width: 240px;
+      min-width: 240px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #ebeff7;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #626c80;
+      text-decoration: none;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .sidebar-nav-item:hover { background: #f5f7fa; color: #39404d; }
+    .sidebar-nav-item.active { background: #c7d8ff; color: #0035b2; }
+    .sidebar-section-label {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #abb3c4;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* ── Page ───────────────────────────────────────────────────── */
+    .page {
+      flex: 1;
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      min-width: 0;
+    }
+
+    /* ── Page header ────────────────────────────────────────────── */
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-heading, #1a1f2b);
+      margin: 0 0 6px;
+    }
+    .page-header p {
+      font-size: 16px;
+      color: var(--text-caption, #626c80);
+      margin: 0;
+    }
+
+    /* ── Toolbar ────────────────────────────────────────────────── */
+    .icons-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .icon-search {
+      flex: 1;
+      min-width: 200px;
+      max-width: 360px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1.5px solid #d2d9e5;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #39404d;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .icon-search::placeholder { color: #abb3c4; }
+    .icon-search:focus { border-color: #0079ce; }
+
+    .size-toggle {
+      display: flex;
+      background: #f5f7fa;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .size-btn {
+      height: 32px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      color: #626c80;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+    .size-btn:hover { background: #e8ecf4; color: #39404d; }
+    .size-btn.active { background: #ffffff; color: #0035b2; box-shadow: 0 1px 3px rgba(0,0,0,0.10); }
+
+    .icon-count {
+      font-size: 13px;
+      color: #abb3c4;
+      margin-left: auto;
+    }
+
+    /* ── Grid ───────────────────────────────────────────────────── */
+    .icons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+      gap: 8px;
+    }
+
+    .icon-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 8px 10px;
+      border: 1px solid #ebeff7;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, transform 0.1s;
+      position: relative;
+      background: #fff;
+    }
+    .icon-cell:hover {
+      background: #f5f7fa;
+      border-color: #c7d8ff;
+    }
+    .icon-cell:active { transform: scale(0.97); }
+    .icon-cell.copied { border-color: #0079ce; background: #eef5ff; }
+
+    .icon-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--icon-container-size, 32px);
+      height: var(--icon-container-size, 32px);
+      flex-shrink: 0;
+    }
+
+    .icon-preview img {
+      width: var(--icon-size, 24px);
+      height: var(--icon-size, 24px);
+      object-fit: contain;
+    }
+
+    /* Placeholder while SVG is not yet exported */
+    .icon-placeholder {
+      width: var(--icon-size, 24px);
+      height: var(--icon-size, 24px);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .icon-name {
+      font-size: 11px;
+      color: #626c80;
+      text-align: center;
+      line-height: 1.3;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
+    /* ── Toast ──────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #1a1f2b;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Empty state ────────────────────────────────────────────── */
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 48px 24px;
+      text-align: center;
+      color: #abb3c4;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <a href="../tokens.html" class="sidebar-nav-item">Tokens</a>
+    <div class="sidebar-section-label">Componentes</div>
+    <a href="buttons.html" class="sidebar-nav-item">Buttons</a>
+    <a href="icons.html" class="sidebar-nav-item active">Icons</a>
+  </nav>
+
+  <!-- ── Main content ────────────────────────────────────────── -->
+  <div class="page">
+
+    <div class="page-header">
+      <h1>Icons</h1>
+      <p>Ícones de produto e funcionalidades do IrisDS. Clique em um ícone para copiar o nome.</p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="icons-toolbar">
+      <input
+        type="search"
+        id="icon-search"
+        class="icon-search"
+        placeholder="Buscar ícone..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="size-toggle">
+        <button class="size-btn" data-size="sm">sm · 16px</button>
+        <button class="size-btn" data-size="md">md · 20px</button>
+        <button class="size-btn active" data-size="lg">lg · 24px</button>
+      </div>
+      <span class="icon-count" id="icon-count">141 ícones</span>
+    </div>
+
+    <!-- Grid -->
+    <div class="icons-grid" id="icons-grid"></div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var IRIS_ICONS = {"more-horizontal":{"label":"More Horizontal","keywords":["more","mais","actions","ações","options","opções","overflow","ellipsis","dots","pontos"],"figmaNodeId":"43:1654","sizes":{"sm":"43:1661","md":"43:1659","lg":"43:1655"}}};
+  var IRIS_ICON_SIZES = {"sm":{"px":16,"label":"Small"},"md":{"px":20,"label":"Medium"},"lg":{"px":24,"label":"Large"}};
+
+  var currentSize = 'lg';
+  var searchQuery = '';
+  var grid = document.getElementById('icons-grid');
+  var searchInput = document.getElementById('icon-search');
+  var countEl = document.getElementById('icon-count');
+  var toastEl = document.getElementById('toast');
+  var toastTimer = null;
+
+  var PLACEHOLDER_COLORS = ['#4f6af0','#0079ce','#7c3aed','#0891b2','#059669','#d97706','#dc2626','#db2777','#65a30d','#ea580c'];
+  function placeholderColor(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+    return PLACEHOLDER_COLORS[Math.abs(h) % PLACEHOLDER_COLORS.length];
+  }
+
+  function renderGrid() {
+    var icons = Object.entries(IRIS_ICONS);
+    var query = searchQuery.trim().toLowerCase();
+    var filtered = query ? icons.filter(function(e) {
+      var name = e[0], meta = e[1];
+      return name.includes(query) || meta.label.toLowerCase().includes(query) ||
+        (meta.keywords || []).some(function(k) { return k.toLowerCase().includes(query); });
+    }) : icons;
+
+    countEl.textContent = filtered.length === icons.length
+      ? (icons.length + ' ícones')
+      : (filtered.length + ' de ' + icons.length + ' ícones');
+
+    var sizePx = IRIS_ICON_SIZES[currentSize].px;
+    var containerPx = Math.max(sizePx + 8, 32);
+    grid.style.setProperty('--icon-size', sizePx + 'px');
+    grid.style.setProperty('--icon-container-size', containerPx + 'px');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = query
+        ? '<div class="empty-state">Nenhum ícone encontrado para &ldquo;' + query + '&rdquo;</div>'
+        : '<div class="empty-state">Nenhum ícone cadastrado ainda.</div>';
+      return;
+    }
+
+    grid.innerHTML = '';
+    filtered.forEach(function(entry) {
+      var name = entry[0], meta = entry[1];
+      var cell = document.createElement('div');
+      cell.className = 'icon-cell';
+      cell.dataset.name = name;
+      cell.title = meta.label + ' — clique para copiar';
+
+      var preview = document.createElement('div');
+      preview.className = 'icon-preview';
+
+      var ph = document.createElement('div');
+      ph.className = 'icon-placeholder';
+      ph.style.background = placeholderColor(name);
+      var initials = name.replace(/-/g, ' ').split(' ').slice(0, 2).map(function(w) { return w[0]; }).join('').toUpperCase();
+      ph.textContent = initials;
+
+      var img = document.createElement('img');
+      img.src = '../icons/' + name + '-' + currentSize + '.svg';
+      img.alt = meta.label;
+      img.width = sizePx;
+      img.height = sizePx;
+      img.loading = 'lazy';
+      img.style.display = 'none';
+      img.onload = function() { img.style.display = ''; ph.style.display = 'none'; };
+
+      preview.appendChild(ph);
+      preview.appendChild(img);
+
+      var label = document.createElement('span');
+      label.className = 'icon-name';
+      label.textContent = name;
+
+      cell.appendChild(preview);
+      cell.appendChild(label);
+      cell.addEventListener('click', function() { copyName(name, cell); });
+      grid.appendChild(cell);
+    });
+  }
+
+  function copyName(name, cell) {
+    var show = function() {
+      cell.classList.add('copied');
+      setTimeout(function() { cell.classList.remove('copied'); }, 900);
+      toastEl.textContent = '“' + name + '” copiado!';
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 1800);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(name).then(show).catch(show);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = name; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove(); show();
+    }
+  }
+
+  document.querySelectorAll('.size-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentSize = btn.dataset.size;
+      renderGrid();
+    });
+  });
+
+  searchInput.addEventListener('input', function(e) {
+    searchQuery = e.target.value;
+    renderGrid();
+  });
+
+  renderGrid();
+})();
+</script>
+
+</body>
+</html>
