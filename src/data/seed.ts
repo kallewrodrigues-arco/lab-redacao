@@ -358,6 +358,11 @@ function buildInitialDb(): Db {
     { id: 'col-pr-11', nome: 'Pratique Redação • 11', cor: '#e07b00' },
     { id: 'col-pr-12', nome: 'Pratique Redação • 12', cor: '#e07b00' },
     { id: 'col-pr-13', nome: 'Pratique Redação • 13', cor: '#e07b00' },
+    { id: 'col-pr-14', nome: 'Pratique Redação • 14', cor: '#e07b00' },
+    { id: 'col-pr-15', nome: 'Pratique Redação • 15', cor: '#e07b00' },
+    { id: 'col-pr-16', nome: 'Pratique Redação • 16', cor: '#e07b00' },
+    { id: 'col-pr-17', nome: 'Pratique Redação • 17', cor: '#e07b00' },
+    { id: 'col-pr-18', nome: 'Pratique Redação • 18', cor: '#e07b00' },
     // Livro I • Aula 1–13 (roxo) — uma por semana, ordem cronológica
     { id: 'col-l3-1',  nome: 'Livro I • Aula 1',  cor: '#6b21a8' },
     { id: 'col-l3-2',  nome: 'Livro I • Aula 2',  cor: '#6b21a8' },
