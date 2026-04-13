@@ -209,7 +209,9 @@ function gerarDadosEmLote(db: Db): void {
         planoDeAcao: PLANOS_ACAO[seed % PLANOS_ACAO.length],
         competencias: ['C1','C2','C3','C4','C5'].map((cod, ci) => ({
           codigo: cod as 'C1'|'C2'|'C3'|'C4'|'C5',
-          nota: notasComp[ci], comentario: pickComment(cod, seed + ci),
+          titulo: COMPETENCIAS_TITULOS[cod],
+          nota: notasComp[ci],
+          comentario: pickComment(cod, seed + ci),
         })),
         comentarios: [{ id: `com-g-${devId - 1}`, texto: COMENTARIOS_GERAIS[seed % COMENTARIOS_GERAIS.length] }],
       });
@@ -260,7 +262,8 @@ function gerarDadosEmLote(db: Db): void {
           competencias: ['C1','C2','C3','C4','C5'].map((cod, ci) => ({
             codigo: cod as 'C1'|'C2'|'C3'|'C4'|'C5',
             titulo: COMPETENCIAS_TITULOS[cod],
-            nota: notasComp[ci], comentario: pickComment(cod, seed + ci),
+            nota: notasComp[ci],
+            comentario: pickComment(cod, seed + ci),
           })),
           comentarios: [{ id: `com-g-${devId - 1}`, texto: COMENTARIOS_GERAIS[seed % COMENTARIOS_GERAIS.length] }],
         });
@@ -275,7 +278,8 @@ function gerarDadosEmLote(db: Db): void {
           competencias: ['C1','C2','C3','C4','C5'].map((cod, ci) => ({
             codigo: cod as 'C1'|'C2'|'C3'|'C4'|'C5',
             titulo: COMPETENCIAS_TITULOS[cod],
-            nota: notasComp[ci], comentario: pickComment(cod, seed + ci),
+            nota: notasComp[ci],
+            comentario: pickComment(cod, seed + ci),
           })),
         });
       }
