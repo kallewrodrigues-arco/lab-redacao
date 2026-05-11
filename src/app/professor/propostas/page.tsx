@@ -88,7 +88,6 @@ function computeStatus(p: PropostaComColecao, todayMonday: string, todayStr: str
     if (stats.pendentes > 0) return 'correcoes_pendentes';
     if (stats.corrigidas >= stats.total) return 'corrigida';
   }
-  if (p.dataAgendada < todayMonday) return 'atrasada';
   return 'visivel';
 }
 
