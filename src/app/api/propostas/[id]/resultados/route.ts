@@ -46,12 +46,13 @@ export async function GET(
   // ── Redações desta proposta ──────────────────────────────────────────────────
   const redacoes = db.redacoes.filter(r => r.propostaId === propostaId);
 
-  // ── Score por redação: devolutiva > correcao ─────────────────────────────────
+  // ── Score por redação: lê direto de Redacao.notaFinal/C1-C5 ─────────────────
   interface AlunoScore {
     alunoId: string;
     turmaId: string;
     redacaoId: string;
     status: string;
+    dataEnvio: string | undefined;
     notaFinal: number;
     competencias: Record<string, number>;
   }
@@ -59,25 +60,17 @@ export async function GET(
   const scores: AlunoScore[] = [];
 
   for (const red of redacoes) {
-    // Só considerar redações com score disponível
     if (!['corrigida', 'aguardando_liberacao'].includes(red.status)) continue;
-
-    // Preferir devolutiva (score validado), fallback para correcao (rascunho IA)
-    const dev = db.devolutivas.find(d => d.redacaoId === red.id);
-    const cor = db.correcoes.find(c => c.redacaoId === red.id);
-    const source = dev ?? cor;
-    if (!source) continue;
-
-    const compMap: Record<string, number> = {};
-    source.competencias.forEach(c => { compMap[c.codigo] = c.nota; });
+    if (red.notaFinal === undefined || red.C1 === undefined) continue;
 
     scores.push({
       alunoId: red.alunoId,
       turmaId: red.turmaId,
       redacaoId: red.id,
       status: red.status,
-      notaFinal: source.notaFinal,
-      competencias: compMap,
+      dataEnvio: red.dataEnvio,
+      notaFinal: red.notaFinal,
+      competencias: { C1: red.C1, C2: red.C2!, C3: red.C3!, C4: red.C4!, C5: red.C5! },
     });
   }
 
@@ -153,6 +146,11 @@ export async function GET(
     return b.notaFinal - a.notaFinal;
   });
 
+  // ── Evolução da proposta (todos os corrigidos agrupados na dataAgendada) ─────
+  const evolucao = scores
+    .filter(s => s.status === 'corrigida')
+    .map(s => ({ data: proposta.dataAgendada, notaFinal: s.notaFinal }));
+
   return NextResponse.json({
     participacao: {
       total: totalAlunos,
@@ -165,5 +163,6 @@ export async function GET(
     histogramaFinal,
     histogramaCompetencias,
     alunos: alunosTable,
+    evolucao,
   });
 }

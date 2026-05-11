@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/data/store';
+import { redacaoToPonto } from '@/lib/redacao-evolucao';
 
 const COMP_TITULOS: Record<string, string> = {
   C1: 'Dominar a escrita formal',
@@ -44,7 +45,11 @@ function formatSemana(mondayStr: string): string {
 
 export async function GET(req: NextRequest) {
   const db = getDb();
-  const { redacoes, alunos, evolucoes, turmas } = db;
+  const { redacoes, alunos, turmas, propostas } = db;
+
+  // Mapa propostaId → dataAgendada (eixo X do gráfico = data da proposta)
+  const propostaMap: Record<string, string> = {};
+  for (const p of propostas) propostaMap[p.id] = p.dataAgendada;
 
   const { searchParams } = new URL(req.url);
   const turmaId = searchParams.get('turmaId') ?? '';
@@ -69,10 +74,12 @@ export async function GET(req: NextRequest) {
   // ── 2. Pontos de evolução (filtrados por aluno e período) ──────────────────
   const limiteData = periodoDias > 0 ? periodoLimite(periodoDias) : '';
 
-  const evolucoesFiltradas = evolucoes.filter((e) => alunoIdsFiltrados.has(e.alunoId));
-  const todosPontos = evolucoesFiltradas.flatMap((e) =>
-    limiteData ? e.historico.filter((p) => p.data >= limiteData) : e.historico
+  const corrigidasFiltradas = redacoes.filter(
+    (r) => r.status === 'corrigida' && alunoIdsFiltrados.has(r.alunoId)
   );
+  const todosPontos = corrigidasFiltradas
+    .map((r) => redacaoToPonto(r, propostaMap[r.propostaId]))
+    .filter((p) => !limiteData || p.data >= limiteData);
 
   // ── 3. Desempenho médio (últimos 30 dias, respeitando filtros) ─────────────
   const limite30 = periodoLimite(30);
@@ -103,7 +110,7 @@ export async function GET(req: NextRequest) {
   const limiteEvolucao = limiteData && limiteData > limite60 ? limiteData : limite60;
 
   const porSemana = new Map<string, number[]>();
-  for (const ponto of evolucoesFiltradas.flatMap((e) => e.historico)) {
+  for (const ponto of corrigidasFiltradas.map((r) => redacaoToPonto(r, propostaMap[r.propostaId]))) {
     if (ponto.data < limiteEvolucao) continue;
     const monday = getMondayOf(ponto.data);
     if (!porSemana.has(monday)) porSemana.set(monday, []);
@@ -119,13 +126,11 @@ export async function GET(req: NextRequest) {
     }));
 
   // ── 6. Pontos brutos (para re-agregação client-side) ──────────────────────
-  const pontos = evolucoesFiltradas.flatMap((e) =>
-    (limiteData ? e.historico.filter((p) => p.data >= limiteData) : e.historico).map((p) => ({
-      data: p.data,
-      notaFinal: p.notaFinal,
-      competencias: p.competencias,
-    }))
-  );
+  const pontos = todosPontos.map((p) => ({
+    data: p.data,
+    notaFinal: p.notaFinal,
+    competencias: p.competencias,
+  }));
 
   // ── 7. Lista de turmas (para popular o filtro no front) ───────────────────
   const turmasList = turmas.map((t) => ({ id: t.id, nome: t.nome }));

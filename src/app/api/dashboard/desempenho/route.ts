@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/data/store';
 import { TagDesempenho } from '@/types';
+import { redacaoToPonto } from '@/lib/redacao-evolucao';
 
 function getTag(media: number): TagDesempenho {
   if (media >= 160) return 'Desafiar';
@@ -25,24 +26,19 @@ export async function GET(request: NextRequest) {
     alunosIds = db.alunos.map((a) => a.id);
   }
 
-  // Devolutivas dos alunos filtrados
-  const redacoesAlunos = db.redacoes.filter((r) => alunosIds.includes(r.alunoId));
-  const redacaoIds = redacoesAlunos.map((r) => r.id);
-  const devolutivas = db.devolutivas.filter((d) => redacaoIds.includes(d.redacaoId));
+  // Redações corrigidas dos alunos filtrados
+  const redacoesCorrigidas = db.redacoes.filter(
+    (r) => alunosIds.includes(r.alunoId) && r.status === 'corrigida' && r.notaFinal !== undefined
+  );
 
   // Participação
   const total = alunosIds.length;
-  const alunosComDevolutiva = new Set(
-    devolutivas.map((d) => {
-      const r = db.redacoes.find((r) => r.id === d.redacaoId);
-      return r?.alunoId;
-    })
-  );
-  const participaram = alunosComDevolutiva.size;
+  const alunosComScore = new Set(redacoesCorrigidas.map((r) => r.alunoId));
+  const participaram = alunosComScore.size;
   const percentual = total > 0 ? Math.round((participaram / total) * 100) : 0;
 
   // Desempenho médio
-  const notas = devolutivas.map((d) => d.notaFinal);
+  const notas = redacoesCorrigidas.map((r) => r.notaFinal as number);
   const desempenhoMedio = notas.length > 0 ? Math.round(notas.reduce((a, b) => a + b, 0) / notas.length) : 0;
 
   // Por competência
@@ -50,26 +46,28 @@ export async function GET(request: NextRequest) {
   const porCompetencia: Record<string, { media: number; tag: TagDesempenho }> = {};
 
   for (const cod of competencias) {
-    const notas = devolutivas
-      .flatMap((d) => d.competencias)
-      .filter((c) => c.codigo === cod)
-      .map((c) => c.nota);
-    const media = notas.length > 0 ? Math.round(notas.reduce((a, b) => a + b, 0) / notas.length) : 0;
+    const notasCod = redacoesCorrigidas
+      .map((r) => r[cod as 'C1' | 'C2' | 'C3' | 'C4' | 'C5'])
+      .filter((n): n is number => n !== undefined);
+    const media = notasCod.length > 0 ? Math.round(notasCod.reduce((a, b) => a + b, 0) / notasCod.length) : 0;
     porCompetencia[cod] = { media, tag: getTag(media) };
   }
 
+  // Mapa propostaId → dataAgendada
+  const propostaMap: Record<string, string> = {};
+  for (const p of db.propostas) propostaMap[p.id] = p.dataAgendada;
+
   // Evolução últimos 60 dias
-  const sessenta = Date.now() - 60 * 24 * 60 * 60 * 1000;
+  const sessentaIso = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const evolucaoMap = new Map<string, number[]>();
-  for (const evolucao of db.evolucoes) {
-    if (!alunosIds.includes(evolucao.alunoId)) continue;
-    for (const ponto of evolucao.historico) {
-      const ts = new Date(ponto.data).getTime();
-      if (ts < sessenta) continue;
-      const arr = evolucaoMap.get(ponto.data) ?? [];
-      arr.push(ponto.notaFinal);
-      evolucaoMap.set(ponto.data, arr);
-    }
+  for (const r of db.redacoes) {
+    if (r.status !== 'corrigida') continue;
+    if (!alunosIds.includes(r.alunoId)) continue;
+    const ponto = redacaoToPonto(r, propostaMap[r.propostaId]);
+    if (ponto.data < sessentaIso) continue;
+    const arr = evolucaoMap.get(ponto.data) ?? [];
+    arr.push(ponto.notaFinal);
+    evolucaoMap.set(ponto.data, arr);
   }
 
   const evolucao = Array.from(evolucaoMap.entries())
@@ -88,9 +86,9 @@ export async function GET(request: NextRequest) {
 
   const porTurma = turmasFiltradas.map((turma) => {
     const alunosTurma = db.alunos.filter((a) => a.turmaId === turma.id).map((a) => a.id);
-    const redTurma = db.redacoes.filter((r) => alunosTurma.includes(r.alunoId)).map((r) => r.id);
-    const devTurma = db.devolutivas.filter((d) => redTurma.includes(d.redacaoId));
-    const notasTurma = devTurma.map((d) => d.notaFinal);
+    const notasTurma = db.redacoes
+      .filter((r) => alunosTurma.includes(r.alunoId) && r.status === 'corrigida' && r.notaFinal !== undefined)
+      .map((r) => r.notaFinal as number);
     const media = notasTurma.length > 0
       ? Math.round(notasTurma.reduce((a, b) => a + b, 0) / notasTurma.length)
       : 0;

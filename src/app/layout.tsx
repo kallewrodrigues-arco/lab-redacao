@@ -22,7 +22,7 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR" data-marca={marca}>
-      <body>
+      <body suppressHydrationWarning>
         <MarcaProvider marca={marca}>
           {children}
         </MarcaProvider>
