@@ -67,6 +67,12 @@ export interface Redacao {
   dataEnvio?: string; // ISO
   arquivoUrl?: string;
   modoCorrecaoAplicado: ModoCorrecao;
+  notaFinal?: number;
+  C1?: number;
+  C2?: number;
+  C3?: number;
+  C4?: number;
+  C5?: number;
 }
 
 export interface CompetenciaCorrecao {

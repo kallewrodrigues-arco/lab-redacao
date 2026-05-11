@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/data/store';
+import { redacaoToPonto } from '@/lib/redacao-evolucao';
 
 function getMondayOf(dateStr: string): string {
   const d = new Date(dateStr + 'T00:00:00');
@@ -16,21 +17,21 @@ function avg(nums: number[]): number {
 
 export async function GET() {
   const db = getDb();
-  const { redacoes, alunos, propostas, evolucoes } = db;
+  const { redacoes, alunos, propostas } = db;
 
-  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-  const now = Date.now();
+  // Mapa propostaId → dataAgendada
+  const propostaMap: Record<string, string> = {};
+  for (const p of propostas) propostaMap[p.id] = p.dataAgendada;
 
+  const hoje = new Date().toISOString().slice(0, 10);
   const propostasComAtrasada = new Set(
     redacoes
-      .filter(
-        (r) =>
-          r.status !== 'corrigida' &&
-          r.status !== 'rejeitada' &&
-          r.dataEnvio &&
-          now - new Date(r.dataEnvio).getTime() > SEVEN_DAYS
-      )
+      .filter((r) => r.status === 'aguardando_liberacao')
       .map((r) => r.propostaId)
+      .filter((pid) => {
+        const p = propostas.find((p) => p.id === pid);
+        return p && p.dataAgendada <= hoje;
+      })
   ).size;
 
   const propostasComPendente = new Set(
@@ -56,8 +57,10 @@ export async function GET() {
   ).size;
   const participacaoMedia = esperadas > 0 ? Math.round((alunosComEnvio / esperadas) * 100) : 0;
 
-  // ── Desempenho semanal (a partir de evolucoes.historico) ──────────────────────
-  const todosPontos = evolucoes.flatMap((e) => e.historico);
+  // ── Desempenho semanal (a partir de redacoes corrigidas) ──────────────────────
+  const todosPontos = redacoes
+    .filter((r) => r.status === 'corrigida')
+    .map((r) => redacaoToPonto(r, propostaMap[r.propostaId]));
   const porSemana = new Map<string, number[]>();
   for (const ponto of todosPontos) {
     const monday = getMondayOf(ponto.data);
