@@ -89,6 +89,7 @@ interface EssayStats { pendentes: number; corrigidas: number; total: number }
 
 function computeStatus(p: PropostaComColecao, todayMonday: string, todayStr: string, stats?: EssayStats): ComputedStatus {
   if (p.status === 'descartada') return 'descartada';
+  if (p.status === 'atrasada')   return 'atrasada';
   if (p.dataAgendada > todayStr) return 'oculto';
   if (stats && stats.total > 0) {
     if (stats.pendentes > 0) return 'correcoes_pendentes';
@@ -297,6 +298,9 @@ export default function ProfessorPropostasPage() {
     } else if (origem === 'corrigidas') {
       setFilterDate('todas');
       setFilterStatuses(new Set(['corrigida']));
+    } else if (origem === 'atrasadas') {
+      setFilterDate('todas');
+      setFilterStatuses(new Set(['atrasada']));
     }
   }, []);
 

@@ -2,7 +2,7 @@ export type Persona = 'gestor' | 'professor' | 'aluno';
 
 export type ModoCorrecao = 'ia_pura' | 'hibrido';
 
-export type StatusProposta = 'agendada' | 'ativa' | 'encerrada' | 'descartada';
+export type StatusProposta = 'agendada' | 'ativa' | 'encerrada' | 'descartada' | 'atrasada';
 
 export type StatusRedacao =
   | 'pendente_envio'

@@ -24,15 +24,7 @@ export async function GET() {
   for (const p of propostas) propostaMap[p.id] = p.dataAgendada;
 
   const hoje = new Date().toISOString().slice(0, 10);
-  const propostasComAtrasada = new Set(
-    redacoes
-      .filter((r) => r.status === 'aguardando_liberacao')
-      .map((r) => r.propostaId)
-      .filter((pid) => {
-        const p = propostas.find((p) => p.id === pid);
-        return p && p.dataAgendada <= hoje;
-      })
-  ).size;
+  const propostasComAtrasada = propostas.filter((p) => p.status === 'atrasada').length;
 
   const propostasComPendente = new Set(
     redacoes.filter((r) => r.status === 'aguardando_liberacao').map((r) => r.propostaId)
