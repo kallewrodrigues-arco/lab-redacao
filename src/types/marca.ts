@@ -28,6 +28,8 @@ export interface MarcaConfig {
   nomeOrganizacao: string;
   /** Caminho da imagem do card da coleção Pratique/Lab no /public */
   imagemColecaoPratique: string;
+  /** Caminho da imagem do card da coleção "Livro I" (material didático) no /public */
+  imagemColecaoLivro: string;
   itensProposta: ItensProposta;
   pdfSources: {
     manualPedagogico:  string | null;

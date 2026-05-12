@@ -50,7 +50,7 @@ export default function PropostaCard({ proposta, colecao }: PropostaCardProps) {
       <div style={{ height: 80, overflow: 'hidden', flexShrink: 0 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={marcaConfig.imagemColecaoPratique}
+          src={colecao?.nome.startsWith('Livro I') ? marcaConfig.imagemColecaoLivro : marcaConfig.imagemColecaoPratique}
           alt=""
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

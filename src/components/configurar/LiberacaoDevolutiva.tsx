@@ -3,12 +3,6 @@
 import { expandColecoesAtivas } from './LiberacaoAtividades';
 import { useMarca } from '@/contexts/MarcaContext';
 
-// ── Constantes de coleção (valores fixos — não variam por marca) ──────────────
-
-const COLECAO_IMAGES_BASE: Record<string, string> = {
-  material_didatico: '/images/livro3.png',
-};
-
 // ── Radio Button customizado ──────────────────────────────────────────────────
 
 function RadioButton({ checked, onClick }: { checked: boolean; onClick: () => void }) {
@@ -62,7 +56,7 @@ export function LiberacaoDevolutiva({ colecoesAtivas, value, onChange }: Liberac
 
   /** Imagens de coleção resolvidas com a imagem da marca ativa */
   const COLECAO_IMAGES: Record<string, string> = {
-    ...COLECAO_IMAGES_BASE,
+    material_didatico: marcaConfig.imagemColecaoLivro,
     material_didatico_pratique: marcaConfig.imagemColecaoPratique,
   };
 

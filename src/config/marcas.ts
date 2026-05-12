@@ -12,6 +12,7 @@ export const MARCAS: Record<Marca, MarcaConfig> = {
     nomeColecaoPratique: 'Pratique Redação',
     nomeOrganizacao: 'SAS Educação',
     imagemColecaoPratique: '/images/pratique-redacao.jpg',
+    imagemColecaoLivro: '/images/livro-sas.png',
     itensProposta: {
       professor: [
         { label: 'Material de apoio (vídeo)', tipo: 'video' },
@@ -42,6 +43,7 @@ export const MARCAS: Record<Marca, MarcaConfig> = {
     nomeColecaoPratique: 'Laboratório de Redação',
     nomeOrganizacao: 'COC',
     imagemColecaoPratique: '/images/lab-redacao.jpg',
+    imagemColecaoLivro: '/images/livro-coc.png',
     itensProposta: {
       professor: [
         { label: 'Manual pedagógico', tipo: 'manual' },
