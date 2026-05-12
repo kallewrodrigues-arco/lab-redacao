@@ -2,6 +2,12 @@
 
 import Link from 'next/link';
 import { Proposta, Colecao } from '@/types';
+import { useMarca } from '@/contexts/MarcaContext';
+
+function resolveColecaoNome(nome: string, nomeColecaoPratique: string): string {
+  const BASE = 'Pratique Redação'
+  return nome.startsWith(BASE) ? nomeColecaoPratique + nome.slice(BASE.length) : nome
+}
 
 interface PropostaCardProps {
   proposta: Proposta;
@@ -15,6 +21,7 @@ function formatVisibilityDate(dateStr: string | undefined): string {
 }
 
 export default function PropostaCard({ proposta, colecao }: PropostaCardProps) {
+  const marcaConfig = useMarca()
   const todayStr = new Date().toISOString().split('T')[0];
   const isOculto = proposta.dataAgendada > todayStr;
   const dotColor = isOculto ? 'var(--color-info-text, #0f5384)' : 'var(--color-success-text, #0c7742)';
@@ -40,18 +47,14 @@ export default function PropostaCard({ proposta, colecao }: PropostaCardProps) {
         cursor: 'pointer',
       }}
     >
-      {proposta.imageUrl ? (
-        <div style={{ height: 80, overflow: 'hidden', flexShrink: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={proposta.imageUrl}
-            alt=""
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        </div>
-      ) : (
-        <div style={{ height: 80, background: 'var(--bg-secondary)', flexShrink: 0 }} />
-      )}
+      <div style={{ height: 80, overflow: 'hidden', flexShrink: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={marcaConfig.imagemColecaoPratique}
+          alt=""
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </div>
 
       <div style={{ padding: '24px 24px 8px', flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
         {colecao && (
@@ -69,7 +72,7 @@ export default function PropostaCard({ proposta, colecao }: PropostaCardProps) {
               }}
             >
               <span style={{ fontSize: 10, fontWeight: 600, color: colecao.cor }}>
-                {colecao.nome.charAt(0)}
+                {resolveColecaoNome(colecao.nome, marcaConfig.nomeColecaoPratique).charAt(0)}
               </span>
             </div>
             <span
@@ -82,7 +85,7 @@ export default function PropostaCard({ proposta, colecao }: PropostaCardProps) {
                 whiteSpace: 'nowrap',
               }}
             >
-              {colecao.nome}
+              {resolveColecaoNome(colecao.nome, marcaConfig.nomeColecaoPratique)}
             </span>
           </div>
         )}

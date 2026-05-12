@@ -157,22 +157,6 @@ function SidebarGroupLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
-// ─── Mapeamento de conteúdo por sub-item ─────────────────────────────────────
-
-const PDF_SOURCES: Record<SubItem, string | null> = {
-  'manual-pedagogico':  null,
-  'proposta-docente':   null,
-  'material-apoio':     null,
-  'proposta-estudante': '/pdfs/proposta-estudante.pdf',
-}
-
-const VIDEO_SOURCES: Record<SubItem, string | null> = {
-  'manual-pedagogico':  null,
-  'proposta-docente':   null,
-  'material-apoio':     'https://player.vimeo.com/video/1122031196?controls=1&transparent=0&dnt=1&api=1&playsinline=1&title=0&byline=0&portrait=0',
-  'proposta-estudante': null,
-}
-
 // ─── Real PDF Viewer (iframe) ─────────────────────────────────────────────────
 
 function RealPDFViewer({ src }: { src: string }) {
@@ -186,6 +170,18 @@ function RealPDFViewer({ src }: { src: string }) {
 }
 
 // ─── Vimeo Player ─────────────────────────────────────────────────────────────
+
+function LocalVideoPlayer({ src }: { src: string }) {
+  return (
+    <div style={{ width: '100%', height: '100%', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <video
+        src={src}
+        controls
+        style={{ width: '100%', height: '100%', display: 'block' }}
+      />
+    </div>
+  )
+}
 
 function VimeoPlayer({ src }: { src: string }) {
   return (
@@ -735,8 +731,8 @@ function NotaTab({
                     const isActive = currentNota === val
                     const isAI = aiNota === val
 
-                    if (isAI) {
-                      // AI-suggested pill: frosted gradient bg + #0571ff border + AI icon + gradient text
+                    // ai-graded-active: AI suggestion AND selected by professor
+                    if (isAI && isActive) {
                       return (
                         <button key={val} onClick={() => onNotaChange(comp.codigo, val)} style={{
                           height: 32, padding: '0 12px', borderRadius: 9999,
@@ -755,24 +751,43 @@ function NotaTab({
                       )
                     }
 
-                    if (isActive) {
-                      // Professor overrode AI: solid comp color pill
+                    // ai-graded-inactive: AI suggestion but professor chose something else
+                    if (isAI && !isActive) {
                       return (
                         <button key={val} onClick={() => onNotaChange(comp.codigo, val)} style={{
-                          height: 32, padding: '0 12px', borderRadius: 9999, border: 'none',
-                          background: compColor, color: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer',
+                          height: 32, padding: '0 12px', borderRadius: 9999,
+                          border: '1px solid #abb3c4', background: '#fff',
+                          cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4,
+                        }}>
+                          <AISparkle size={16} color="#626c80" />
+                          <span style={{ fontSize: 14, fontWeight: 500, color: '#626c80' }}>
+                            {val === 0 ? 'Zero' : val}
+                          </span>
+                        </button>
+                      )
+                    }
+
+                    // human-graded: professor selected, not AI's suggestion
+                    if (!isAI && isActive) {
+                      return (
+                        <button key={val} onClick={() => onNotaChange(comp.codigo, val)} style={{
+                          height: 32, padding: '0 12px', borderRadius: 9999,
+                          border: '1px solid #3b9bde', background: '#cceaff',
+                          color: '#0460a1', fontSize: 14, fontWeight: 500, cursor: 'pointer',
+                          display: 'inline-flex', alignItems: 'center',
                         }}>
                           {val === 0 ? 'Zero' : val}
                         </button>
                       )
                     }
 
-                    // Default unselected pill: white bg, #abb3c4 border, 14px/500/#626c80
+                    // not-graded: default unselected
                     return (
                       <button key={val} onClick={() => onNotaChange(comp.codigo, val)} style={{
                         height: 32, padding: '0 12px', borderRadius: 9999,
                         border: '1px solid #abb3c4', background: '#fff',
                         color: '#626c80', fontSize: 14, fontWeight: 500, cursor: 'pointer',
+                        display: 'inline-flex', alignItems: 'center',
                       }}>
                         {val === 0 ? 'Zero' : val}
                       </button>
@@ -1312,7 +1327,7 @@ function AbaCorrecao({ propostaId }: { propostaId: string }) {
   const [queueLoading, setQueueLoading] = useState(true)
   const [rascunhoLoading, setRascunhoLoading] = useState(false)
   const [filterTurma, setFilterTurma] = useState('todas')
-  const [filterStatus, setFilterStatus] = useState<'aguardando_liberacao' | 'todas'>('aguardando_liberacao')
+  const [filterStatus, setFilterStatus] = useState<'aguardando_liberacao' | 'todas'>('todas')
 
   // Load queue
   useEffect(() => {
@@ -1445,8 +1460,14 @@ function AbaCorrecao({ propostaId }: { propostaId: string }) {
           alignItems: 'flex-start',
           padding: '32px 24px 64px',
         }}>
-          <div style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'top center', transition: 'transform 0.2s' }}>
-            <EssayPaper />
+          <div style={{ width: '100%', transform: `scale(${zoom / 100})`, transformOrigin: 'top center', transition: 'transform 0.2s' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={current?.id}
+              src={`/redacoes/${current?.id}.webp`}
+              alt="Redação do aluno"
+              style={{ width: '100%', display: 'block' }}
+            />
           </div>
 
           {/* Zoom control — bottom-left */}
@@ -1860,7 +1881,37 @@ function PropostaDetalheInner() {
   const marcaConfig = useMarca()
 
   const aba = (searchParams.get('aba') as Aba) || 'proposta'
-  const [subItem, setSubItem] = useState<SubItem>('manual-pedagogico')
+
+  const docenteItems = [
+    {
+      subItem: 'manual-pedagogico' as SubItem,
+      label: marcaConfig.itensProposta.professor[0]?.label ?? 'Manual pedagógico',
+      src: marcaConfig.pdfSources.manualPedagogico,
+    },
+    {
+      subItem: 'proposta-docente' as SubItem,
+      label: marcaConfig.itensProposta.professor[1]?.label ?? 'Proposta de redação',
+      src: marcaConfig.pdfSources.propostaDocente,
+    },
+  ].filter(i => i.src !== null)
+
+  const estudanteItems = [
+    {
+      subItem: 'material-apoio' as SubItem,
+      label: marcaConfig.itensProposta.estudante[0]?.label ?? 'Material de apoio',
+      src: marcaConfig.videoSources.materialApoio,
+    },
+    {
+      subItem: 'proposta-estudante' as SubItem,
+      label: marcaConfig.itensProposta.estudante[1]?.label ?? 'Proposta de redação',
+      src: marcaConfig.pdfSources.propostaEstudante,
+    },
+  ].filter(i => i.src !== null)
+
+  const defaultSubItem: SubItem =
+    [...docenteItems, ...estudanteItems][0]?.subItem ?? 'proposta-estudante'
+
+  const [subItem, setSubItem] = useState<SubItem>(defaultSubItem)
   const [proposta, setProposta] = useState<PropostaAPI | null>(null)
   const [loading, setLoading] = useState(true)
   const [temPendentes, setTemPendentes] = useState(false)
@@ -1930,11 +1981,18 @@ function PropostaDetalheInner() {
   // ── Content by sub-item ──────────────────────────────────────────────────────
 
   const renderSubContent = () => {
-    const pdfSrc = PDF_SOURCES[subItem]
+    const srcMap: Record<SubItem, string | null> = {
+      'manual-pedagogico':  marcaConfig.pdfSources.manualPedagogico,
+      'proposta-docente':   marcaConfig.pdfSources.propostaDocente,
+      'material-apoio':     marcaConfig.videoSources.materialApoio,
+      'proposta-estudante': marcaConfig.pdfSources.propostaEstudante,
+    }
+    const pdfSrc = srcMap[subItem]
 
     if (subItem === 'material-apoio') {
-      const videoSrc = VIDEO_SOURCES[subItem]
-      return videoSrc ? <VimeoPlayer src={videoSrc} /> : <MockVideoPlayer />
+      return pdfSrc
+        ? pdfSrc.startsWith('/') ? <LocalVideoPlayer src={pdfSrc} /> : <VimeoPlayer src={pdfSrc} />
+        : <MockVideoPlayer />
     }
 
     if (pdfSrc) return <RealPDFViewer src={pdfSrc} />
@@ -2042,12 +2100,32 @@ function PropostaDetalheInner() {
             }}>
               <StatusIndicator dataAgendada={proposta.dataAgendada} status={proposta.status} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <SidebarGroupLabel>Para o docente</SidebarGroupLabel>
-                <SidebarItem label={marcaConfig.itensProposta.professor[0]?.label ?? 'Manual pedagógico'}  active={subItem === 'manual-pedagogico'} onClick={() => setSubItem('manual-pedagogico')} />
-                <SidebarItem label={marcaConfig.itensProposta.professor[1]?.label ?? 'Proposta de redação'} active={subItem === 'proposta-docente'}  onClick={() => setSubItem('proposta-docente')} />
-                <SidebarGroupLabel>Para o estudante</SidebarGroupLabel>
-                <SidebarItem label={marcaConfig.itensProposta.estudante[0]?.label ?? 'Material de apoio'}  active={subItem === 'material-apoio'}     onClick={() => setSubItem('material-apoio')} />
-                <SidebarItem label={marcaConfig.itensProposta.estudante[1]?.label ?? 'Proposta de redação'} active={subItem === 'proposta-estudante'} onClick={() => setSubItem('proposta-estudante')} />
+                {docenteItems.length > 0 && (
+                  <>
+                    <SidebarGroupLabel>Para o docente</SidebarGroupLabel>
+                    {docenteItems.map(i => (
+                      <SidebarItem
+                        key={i.subItem}
+                        label={i.label}
+                        active={subItem === i.subItem}
+                        onClick={() => setSubItem(i.subItem)}
+                      />
+                    ))}
+                  </>
+                )}
+                {estudanteItems.length > 0 && (
+                  <>
+                    <SidebarGroupLabel>Para o estudante</SidebarGroupLabel>
+                    {estudanteItems.map(i => (
+                      <SidebarItem
+                        key={i.subItem}
+                        label={i.label}
+                        active={subItem === i.subItem}
+                        onClick={() => setSubItem(i.subItem)}
+                      />
+                    ))}
+                  </>
+                )}
               </div>
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>

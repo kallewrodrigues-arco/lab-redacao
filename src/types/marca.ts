@@ -24,7 +24,17 @@ export interface MarcaConfig {
   corPrimariaHover: string;
   /** Nome da coleção "Pratique" para esta marca (ex: "Pratique Redação" | "Laboratório de Redação") */
   nomeColecaoPratique: string;
+  /** Nome da organização para textos de interface (ex: "SAS Educação" | "COC") */
+  nomeOrganizacao: string;
   /** Caminho da imagem do card da coleção Pratique/Lab no /public */
   imagemColecaoPratique: string;
   itensProposta: ItensProposta;
+  pdfSources: {
+    manualPedagogico:  string | null;
+    propostaDocente:   string | null;
+    propostaEstudante: string | null;
+  };
+  videoSources: {
+    materialApoio: string | null;
+  };
 }

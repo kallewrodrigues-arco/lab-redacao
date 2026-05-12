@@ -201,7 +201,7 @@ export function LiberacaoAtividades({ colecoesAtivas, value, onChange }: Liberac
                             Liberação automática
                           </p>
                           <p style={{ margin: 0, fontSize: 14, fontWeight: 400, color: '#626c80', lineHeight: 1.25, letterSpacing: '0.2px' }}>
-                            As atividades são liberadas na data que o SAS Educação definiu. Professores podem alterar as datas.
+                            As atividades são liberadas na data que o {marcaConfig.nomeOrganizacao} definiu. Professores podem alterar as datas.
                           </p>
                         </div>
                       </div>

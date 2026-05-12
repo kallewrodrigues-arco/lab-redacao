@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PropostaComColecao, Redacao } from '@/types';
+import { useMarca } from '@/contexts/MarcaContext';
 
 // Variável de módulo: só permite drag quando o pointer desceu no handle
 let canDragId: string | null = null;
@@ -51,6 +52,11 @@ function formatDate(dateStr: string | undefined): string {
 function colecaoBaseName(nome: string): string {
   const idx = nome.indexOf(' • ');
   return idx >= 0 ? nome.slice(0, idx) : nome;
+}
+
+function resolveColecaoNome(nome: string, nomeColecaoPratique: string): string {
+  const BASE = 'Pratique Redação'
+  return nome.startsWith(BASE) ? nomeColecaoPratique + nome.slice(BASE.length) : nome
 }
 
 /**
@@ -256,6 +262,7 @@ const dateInputStyle: React.CSSProperties = {
 
 export default function ProfessorPropostasPage() {
   const router = useRouter();
+  const marcaConfig = useMarca();
   const todayMonday = useRef(getTodayMonday()).current;
   const todayStr = useRef(new Date().toISOString().split('T')[0]).current;
 
@@ -411,12 +418,12 @@ export default function ProfessorPropostasPage() {
 
   // Unique base collection names
   const colecaoBaseNames = [...new Set(
-    propostas.flatMap(p => p.colecao ? [colecaoBaseName(p.colecao.nome)] : [])
+    propostas.flatMap(p => p.colecao ? [colecaoBaseName(resolveColecaoNome(p.colecao.nome, marcaConfig.nomeColecaoPratique))] : [])
   )].sort();
 
   const filtered = propostas.filter(p => {
     if (!isInDateRange(p, filterDate, todayMonday, filterDateStart, filterDateEnd)) return false;
-    if (filterColecaoBase && p.colecao && colecaoBaseName(p.colecao.nome) !== filterColecaoBase) return false;
+    if (filterColecaoBase && p.colecao && colecaoBaseName(resolveColecaoNome(p.colecao.nome, marcaConfig.nomeColecaoPratique)) !== filterColecaoBase) return false;
     if (filterStatuses.size > 0) {
       const computed = computeStatus(p, todayMonday, todayStr, essayStatsMap.get(p.id));
       if (!filterStatuses.has(computed)) return false;
@@ -705,10 +712,10 @@ export default function ProfessorPropostasPage() {
                             {p.colecao && (
                               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <div style={{ width: 24, height: 24, borderRadius: '50%', background: p.colecao.cor + '33', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                  <span style={{ fontSize: 10, fontWeight: 600, color: p.colecao.cor }}>{p.colecao.nome.charAt(0)}</span>
+                                  <span style={{ fontSize: 10, fontWeight: 600, color: p.colecao.cor }}>{resolveColecaoNome(p.colecao.nome, marcaConfig.nomeColecaoPratique).charAt(0)}</span>
                                 </div>
                                 <span style={{ fontSize: 14, color: p.colecao.cor, letterSpacing: '0.2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                  {p.colecao.nome}
+                                  {resolveColecaoNome(p.colecao.nome, marcaConfig.nomeColecaoPratique)}
                                 </span>
                               </div>
                             )}
@@ -780,7 +787,7 @@ export default function ProfessorPropostasPage() {
               {drawerPropostas.map(p => (
                 <div key={p.id} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {p.colecao && (
-                    <span style={{ fontSize: 12, color: p.colecao.cor, fontWeight: 500 }}>{p.colecao.nome}</span>
+                    <span style={{ fontSize: 12, color: p.colecao.cor, fontWeight: 500 }}>{resolveColecaoNome(p.colecao.nome, marcaConfig.nomeColecaoPratique)}</span>
                   )}
                   <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: 'var(--text-body)', lineHeight: 1.4 }}>{p.titulo}</p>
                   <input
