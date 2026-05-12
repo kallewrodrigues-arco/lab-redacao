@@ -795,27 +795,38 @@ function NotaTab({
                   })}
                 </div>
 
-                {/* ── AiReason: px-16 pb-16, flex gap-8 items-start ── */}
-                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', padding: '0 16px 16px' }}>
-                  {/* Left col: AI icon (20px) + vertical line (1px, flex-grow) */}
-                  <div style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    gap: 8, alignSelf: 'stretch', flexShrink: 0,
-                  }}>
-                    <AISparkle size={20} color="#626c80" />
-                    <div style={{ flex: '1 0 0', width: 1, background: '#d2d9e5', minHeight: 1 }} />
+                {/* ── AiFeedback: flex-col gap-8 px-16 pb-16 ── */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '0 16px 16px' }}>
+                  {/* Row 1: icon + divider | label + body */}
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, alignSelf: 'stretch', flexShrink: 0 }}>
+                      <AISparkle size={20} color="#0571ff" />
+                      <div style={{ flex: '1 0 0', width: 1, background: '#0571ff', minHeight: 1 }} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', height: 21 }}>
+                        <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: '#232831', lineHeight: 1.5 }}>Devolutiva</p>
+                      </div>
+                      <p style={{ margin: 0, fontSize: 14, fontWeight: 400, color: '#232831', lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {comp.comentario}
+                      </p>
+                    </div>
                   </div>
-                  {/* Right col: body text (14px/400/#232831) + "Mais detalhes" button */}
-                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    <p style={{ margin: 0, fontSize: 14, fontWeight: 400, color: '#232831', lineHeight: 1.5 }}>
-                      {comp.comentario}
-                    </p>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      <button style={{
-                        fontSize: 14, fontWeight: 500, color: '#626c80',
-                        background: 'none', border: 'none', padding: '4px 12px', borderRadius: 8, cursor: 'pointer',
-                      }}>
-                        Mais detalhes
+                  {/* Row 2: actions bar */}
+                  <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                    <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, color: '#626c80', lineHeight: 1.5, padding: '4px 12px', borderRadius: 8 }}>
+                      Mostrar análise completa
+                    </button>
+                    <div style={{ flex: '1 0 0', display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'flex-end' }}>
+                      <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M14.166 2.5a2.357 2.357 0 0 1 3.334 3.333L6.25 17.083l-4.167.917.917-4.167L14.166 2.5z" stroke="#626c80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+                      <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M2.5 5h15M15.833 5v11.667A1.667 1.667 0 0 1 14.167 18.333H5.833A1.667 1.667 0 0 1 4.167 16.667V5M6.667 5V3.333A1.667 1.667 0 0 1 8.333 1.667h3.334A1.667 1.667 0 0 1 13.333 3.333V5" stroke="#626c80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                       </button>
                     </div>
                   </div>

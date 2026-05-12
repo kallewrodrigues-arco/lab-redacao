@@ -52,7 +52,20 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(f'{p[\\\\\"id\\\\\"]}: {p[\\\\\"pendentes\\\\\"]} pendentes'\\) for p in d]\")",
       "Bash(curl -s http://localhost:3000/api/home/relatorio)",
       "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
-      "WebFetch(domain:www.figma.com)"
+      "WebFetch(domain:www.figma.com)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(node -e ' *)",
+      "Bash(git checkout *)",
+      "Bash(grep -v \"propostaId: 'prop-7'\\\\|propostaId: 'prop-16'\\\\|propostaId: 'prop-19'\" /Users/kallewguedes/Documents/Projetos/lab-redacao-cursor/src/data/redacoes-seed.ts)",
+      "Bash(mv /tmp/redacoes-seed-clean.ts /Users/kallewguedes/Documents/Projetos/lab-redacao-cursor/src/data/redacoes-seed.ts)",
+      "Bash(curl -s http://localhost:3000/api/dev/reset-db -X POST)",
+      "Bash(curl -s \"http://localhost:3000/api/home/overview\")",
+      "Bash(git -C /Users/kallewguedes/Documents/Projetos/lab-redacao-cursor status)",
+      "Bash(git -C /Users/kallewguedes/Documents/Projetos/lab-redacao-cursor diff --stat HEAD)",
+      "Bash(xargs ls)",
+      "Bash(git -C /Users/kallewguedes/Documents/Projetos/lab-redacao-cursor log --oneline -3)"
     ]
   }
 }

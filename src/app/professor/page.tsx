@@ -648,6 +648,7 @@ export default async function ProfessorPage({
                   <PropostaListItem
                     key={p.id}
                     proposta={p}
+                    colecao={p.colecao}
                     subtitle={`${p.pendentes} aguardando correção`}
                     href={`/professor/propostas/${p.id}?aba=correcao`}
                   />
@@ -662,7 +663,7 @@ export default async function ProfessorPage({
 
         {/* US4: Acompanhe o desempenho */}
         <section style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={sectionHeadingStyle}>Acompanhe o desempenho</h2>
+          <h2 style={sectionHeadingStyle}>Últimos resultados</h2>
           {corrigidas.length === 0 ? (
             <p style={{ color: 'var(--text-caption)' }}>Nenhuma proposta corrigida.</p>
           ) : (
@@ -672,6 +673,7 @@ export default async function ProfessorPage({
                   <PropostaListItem
                     key={p.id}
                     proposta={p}
+                    colecao={p.colecao}
                     subtitle={formatDate(p.dataAgendada)}
                     href={`/professor/propostas/${p.id}?aba=resultados`}
                   />

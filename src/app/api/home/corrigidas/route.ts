@@ -9,18 +9,22 @@ export async function GET(request: NextRequest) {
   const result = db.propostas
     .filter((p) => p.status !== 'descartada')
     .map((p) => {
-      const redacoes = db.redacoes.filter((r) => r.propostaId === p.id);
-      const total = redacoes.length;
-      const corrigidas = redacoes.filter((r) => r.status === 'corrigida').length;
-      return { p, total, corrigidas };
+      const corrigidasList = db.redacoes.filter(
+        (r) => r.propostaId === p.id && r.status === 'corrigida'
+      );
+      if (corrigidasList.length === 0) return null;
+      const latestEnvio = corrigidasList
+        .map((r) => new Date(r.dataEnvio!).getTime())
+        .reduce((a, b) => Math.max(a, b), 0);
+      return { p, corrigidas: corrigidasList.length, latestEnvio };
     })
-    .filter(({ total, corrigidas }) => total > 0 && corrigidas === total)
-    .sort((a, b) => new Date(b.p.dataAgendada).getTime() - new Date(a.p.dataAgendada).getTime())
+    .filter(Boolean)
+    .sort((a, b) => b!.latestEnvio - a!.latestEnvio)
     .slice(0, limit)
-    .map(({ p, corrigidas }) => ({
-      ...p,
-      colecao: db.colecoes.find((c) => c.id === p.colecaoId) ?? null,
-      corrigidas,
+    .map((item) => ({
+      ...item!.p,
+      colecao: db.colecoes.find((c) => c.id === item!.p.colecaoId) ?? null,
+      corrigidas: item!.corrigidas,
     }));
 
   return NextResponse.json(result, { headers: { 'Content-Type': 'application/json' } });

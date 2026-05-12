@@ -1,8 +1,12 @@
+'use client';
+
 import Link from 'next/link';
-import { Proposta } from '@/types';
+import { Proposta, Colecao } from '@/types';
+import { useMarca } from '@/contexts/MarcaContext';
 
 interface PropostaListItemProps {
-  proposta: Proposta & { imageUrl?: string };
+  proposta: Proposta;
+  colecao?: Colecao | null;
   subtitle: string;
   href: string;
 }
@@ -29,7 +33,12 @@ const Chevron = () => (
   </div>
 );
 
-export default function PropostaListItem({ proposta, subtitle, href }: PropostaListItemProps) {
+export default function PropostaListItem({ proposta, colecao, subtitle, href }: PropostaListItemProps) {
+  const marcaConfig = useMarca();
+  const imageUrl = colecao?.nome.startsWith('Livro I')
+    ? marcaConfig.imagemColecaoLivro
+    : marcaConfig.imagemColecaoPratique;
+
   return (
     <Link href={href} style={{ textDecoration: 'none', display: 'block' }}>
       <div
@@ -44,18 +53,14 @@ export default function PropostaListItem({ proposta, subtitle, href }: PropostaL
           color: 'inherit',
         }}
       >
-        {proposta.imageUrl ? (
-          <div style={{ width: 32, height: 32, borderRadius: 4, overflow: 'hidden', flexShrink: 0 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={proposta.imageUrl}
-              alt=""
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-        ) : (
-          <div style={{ width: 32, height: 32, borderRadius: 4, flexShrink: 0, background: 'var(--bg-secondary)' }} />
-        )}
+        <div style={{ width: 32, height: 32, borderRadius: 4, overflow: 'hidden', flexShrink: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageUrl}
+            alt=""
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <p
             style={{
